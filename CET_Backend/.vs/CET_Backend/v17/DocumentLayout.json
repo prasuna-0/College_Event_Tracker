@@ -1,0 +1,257 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Acer\\Desktop\\UniTrack\\CET_Backend\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{2B11AB9B-0486-4718-B543-F3A222C65A3A}|CET_Backend\\CET_Backend.csproj|c:\\users\\acer\\desktop\\unitrack\\cet_backend\\cet_backend\\controllers\\budgetcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2B11AB9B-0486-4718-B543-F3A222C65A3A}|CET_Backend\\CET_Backend.csproj|solutionrelative:cet_backend\\controllers\\budgetcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2B11AB9B-0486-4718-B543-F3A222C65A3A}|CET_Backend\\CET_Backend.csproj|c:\\users\\acer\\desktop\\unitrack\\cet_backend\\cet_backend\\services\\budgetservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2B11AB9B-0486-4718-B543-F3A222C65A3A}|CET_Backend\\CET_Backend.csproj|solutionrelative:cet_backend\\services\\budgetservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Acer\\Desktop\\UniTrack\\CET_Backend\\CET_Backend\\Migrations\\20250906081047_BudgetUpdated.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:CET_Backend\\Migrations\\20250906081047_BudgetUpdated.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2B11AB9B-0486-4718-B543-F3A222C65A3A}|CET_Backend\\CET_Backend.csproj|c:\\users\\acer\\desktop\\unitrack\\cet_backend\\cet_backend\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2B11AB9B-0486-4718-B543-F3A222C65A3A}|CET_Backend\\CET_Backend.csproj|solutionrelative:cet_backend\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2B11AB9B-0486-4718-B543-F3A222C65A3A}|CET_Backend\\CET_Backend.csproj|c:\\users\\acer\\desktop\\unitrack\\cet_backend\\cet_backend\\entities\\budget.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2B11AB9B-0486-4718-B543-F3A222C65A3A}|CET_Backend\\CET_Backend.csproj|solutionrelative:cet_backend\\entities\\budget.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Acer\\Desktop\\UniTrack\\CET_Backend\\CET_Backend\\Migrations\\20250906080731_BudgetUpdated.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:CET_Backend\\Migrations\\20250906080731_BudgetUpdated.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2B11AB9B-0486-4718-B543-F3A222C65A3A}|CET_Backend\\CET_Backend.csproj|c:\\users\\acer\\desktop\\unitrack\\cet_backend\\cet_backend\\entities\\budgethead.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2B11AB9B-0486-4718-B543-F3A222C65A3A}|CET_Backend\\CET_Backend.csproj|solutionrelative:cet_backend\\entities\\budgethead.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Acer\\Desktop\\UniTrack\\CET_Backend\\CET_Backend\\Migrations\\20250906080528_BudgetUpdated.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:CET_Backend\\Migrations\\20250906080528_BudgetUpdated.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2B11AB9B-0486-4718-B543-F3A222C65A3A}|CET_Backend\\CET_Backend.csproj|c:\\users\\acer\\desktop\\unitrack\\cet_backend\\cet_backend\\models\\dtos\\budgetwithheadsdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2B11AB9B-0486-4718-B543-F3A222C65A3A}|CET_Backend\\CET_Backend.csproj|solutionrelative:cet_backend\\models\\dtos\\budgetwithheadsdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2B11AB9B-0486-4718-B543-F3A222C65A3A}|CET_Backend\\CET_Backend.csproj|c:\\users\\acer\\desktop\\unitrack\\cet_backend\\cet_backend\\interfaces\\ibudgetservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2B11AB9B-0486-4718-B543-F3A222C65A3A}|CET_Backend\\CET_Backend.csproj|solutionrelative:cet_backend\\interfaces\\ibudgetservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2B11AB9B-0486-4718-B543-F3A222C65A3A}|CET_Backend\\CET_Backend.csproj|c:\\users\\acer\\desktop\\unitrack\\cet_backend\\cet_backend\\entities\\photo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2B11AB9B-0486-4718-B543-F3A222C65A3A}|CET_Backend\\CET_Backend.csproj|solutionrelative:cet_backend\\entities\\photo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2B11AB9B-0486-4718-B543-F3A222C65A3A}|CET_Backend\\CET_Backend.csproj|c:\\users\\acer\\desktop\\unitrack\\cet_backend\\cet_backend\\controllers\\albumscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2B11AB9B-0486-4718-B543-F3A222C65A3A}|CET_Backend\\CET_Backend.csproj|solutionrelative:cet_backend\\controllers\\albumscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Acer\\Desktop\\UniTrack\\CET_Backend\\CET_Backend\\Migrations\\20250906041620_UrlUpdated.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:CET_Backend\\Migrations\\20250906041620_UrlUpdated.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2B11AB9B-0486-4718-B543-F3A222C65A3A}|CET_Backend\\CET_Backend.csproj|c:\\users\\acer\\desktop\\unitrack\\cet_backend\\cet_backend\\migrations\\20250905184731_albumcreated.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2B11AB9B-0486-4718-B543-F3A222C65A3A}|CET_Backend\\CET_Backend.csproj|solutionrelative:cet_backend\\migrations\\20250905184731_albumcreated.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 7,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "20250906081047_BudgetUpdated.cs",
+              "DocumentMoniker": "C:\\Users\\Acer\\Desktop\\UniTrack\\CET_Backend\\CET_Backend\\Migrations\\20250906081047_BudgetUpdated.cs",
+              "RelativeDocumentMoniker": "CET_Backend\\Migrations\\20250906081047_BudgetUpdated.cs",
+              "ToolTip": "C:\\Users\\Acer\\Desktop\\UniTrack\\CET_Backend\\CET_Backend\\Migrations\\20250906081047_BudgetUpdated.cs",
+              "RelativeToolTip": "CET_Backend\\Migrations\\20250906081047_BudgetUpdated.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-06T08:10:47.934Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "20250906080731_BudgetUpdated.cs",
+              "DocumentMoniker": "C:\\Users\\Acer\\Desktop\\UniTrack\\CET_Backend\\CET_Backend\\Migrations\\20250906080731_BudgetUpdated.cs",
+              "RelativeDocumentMoniker": "CET_Backend\\Migrations\\20250906080731_BudgetUpdated.cs",
+              "ToolTip": "C:\\Users\\Acer\\Desktop\\UniTrack\\CET_Backend\\CET_Backend\\Migrations\\20250906080731_BudgetUpdated.cs",
+              "RelativeToolTip": "CET_Backend\\Migrations\\20250906080731_BudgetUpdated.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-06T08:07:31.662Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "20250906080528_BudgetUpdated.cs",
+              "DocumentMoniker": "C:\\Users\\Acer\\Desktop\\UniTrack\\CET_Backend\\CET_Backend\\Migrations\\20250906080528_BudgetUpdated.cs",
+              "RelativeDocumentMoniker": "CET_Backend\\Migrations\\20250906080528_BudgetUpdated.cs",
+              "ToolTip": "C:\\Users\\Acer\\Desktop\\UniTrack\\CET_Backend\\CET_Backend\\Migrations\\20250906080528_BudgetUpdated.cs",
+              "RelativeToolTip": "CET_Backend\\Migrations\\20250906080528_BudgetUpdated.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-06T08:05:28.801Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "BudgetHead.cs",
+              "DocumentMoniker": "C:\\Users\\Acer\\Desktop\\UniTrack\\CET_Backend\\CET_Backend\\Entities\\BudgetHead.cs",
+              "RelativeDocumentMoniker": "CET_Backend\\Entities\\BudgetHead.cs",
+              "ToolTip": "C:\\Users\\Acer\\Desktop\\UniTrack\\CET_Backend\\CET_Backend\\Entities\\BudgetHead.cs",
+              "RelativeToolTip": "CET_Backend\\Entities\\BudgetHead.cs",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAwwAwAAAA7AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-06T08:04:15.247Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Budget.cs",
+              "DocumentMoniker": "C:\\Users\\Acer\\Desktop\\UniTrack\\CET_Backend\\CET_Backend\\Entities\\Budget.cs",
+              "RelativeDocumentMoniker": "CET_Backend\\Entities\\Budget.cs",
+              "ToolTip": "C:\\Users\\Acer\\Desktop\\UniTrack\\CET_Backend\\CET_Backend\\Entities\\Budget.cs",
+              "RelativeToolTip": "CET_Backend\\Entities\\Budget.cs",
+              "ViewState": "AgIAABYAAAAAAAAAAAAcwBsAAAA2AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-06T07:59:56.512Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "BudgetWithHeadsDto.cs",
+              "DocumentMoniker": "C:\\Users\\Acer\\Desktop\\UniTrack\\CET_Backend\\CET_Backend\\Models\\DTOs\\BudgetWithHeadsDto.cs",
+              "RelativeDocumentMoniker": "CET_Backend\\Models\\DTOs\\BudgetWithHeadsDto.cs",
+              "ToolTip": "C:\\Users\\Acer\\Desktop\\UniTrack\\CET_Backend\\CET_Backend\\Models\\DTOs\\BudgetWithHeadsDto.cs",
+              "RelativeToolTip": "CET_Backend\\Models\\DTOs\\BudgetWithHeadsDto.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAowAoAAABTAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-06T07:57:36.843Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "IBudgetService.cs",
+              "DocumentMoniker": "C:\\Users\\Acer\\Desktop\\UniTrack\\CET_Backend\\CET_Backend\\Interfaces\\IBudgetService.cs",
+              "RelativeDocumentMoniker": "CET_Backend\\Interfaces\\IBudgetService.cs",
+              "ToolTip": "C:\\Users\\Acer\\Desktop\\UniTrack\\CET_Backend\\CET_Backend\\Interfaces\\IBudgetService.cs",
+              "RelativeToolTip": "CET_Backend\\Interfaces\\IBudgetService.cs",
+              "ViewState": "AgIAAAsAAAAAAAAAAAAQwA0AAAA8AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-06T06:23:53.118Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "BudgetController.cs",
+              "DocumentMoniker": "C:\\Users\\Acer\\Desktop\\UniTrack\\CET_Backend\\CET_Backend\\Controllers\\BudgetController.cs",
+              "RelativeDocumentMoniker": "CET_Backend\\Controllers\\BudgetController.cs",
+              "ToolTip": "C:\\Users\\Acer\\Desktop\\UniTrack\\CET_Backend\\CET_Backend\\Controllers\\BudgetController.cs",
+              "RelativeToolTip": "CET_Backend\\Controllers\\BudgetController.cs",
+              "ViewState": "AgIAAMwAAAAAAAAAAAAuwNQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-06T06:20:48.822Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "BudgetService.cs",
+              "DocumentMoniker": "C:\\Users\\Acer\\Desktop\\UniTrack\\CET_Backend\\CET_Backend\\Services\\BudgetService.cs",
+              "RelativeDocumentMoniker": "CET_Backend\\Services\\BudgetService.cs",
+              "ToolTip": "C:\\Users\\Acer\\Desktop\\UniTrack\\CET_Backend\\CET_Backend\\Services\\BudgetService.cs",
+              "RelativeToolTip": "CET_Backend\\Services\\BudgetService.cs",
+              "ViewState": "AgIAABsAAAAAAAAAAAAowBwAAAAjAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-06T06:14:46.345Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "20250906041620_UrlUpdated.cs",
+              "DocumentMoniker": "C:\\Users\\Acer\\Desktop\\UniTrack\\CET_Backend\\CET_Backend\\Migrations\\20250906041620_UrlUpdated.cs",
+              "RelativeDocumentMoniker": "CET_Backend\\Migrations\\20250906041620_UrlUpdated.cs",
+              "ToolTip": "C:\\Users\\Acer\\Desktop\\UniTrack\\CET_Backend\\CET_Backend\\Migrations\\20250906041620_UrlUpdated.cs",
+              "RelativeToolTip": "CET_Backend\\Migrations\\20250906041620_UrlUpdated.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-06T04:16:20.897Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "Photo.cs",
+              "DocumentMoniker": "C:\\Users\\Acer\\Desktop\\UniTrack\\CET_Backend\\CET_Backend\\Entities\\Photo.cs",
+              "RelativeDocumentMoniker": "CET_Backend\\Entities\\Photo.cs",
+              "ToolTip": "C:\\Users\\Acer\\Desktop\\UniTrack\\CET_Backend\\CET_Backend\\Entities\\Photo.cs",
+              "RelativeToolTip": "CET_Backend\\Entities\\Photo.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAnAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-06T04:10:38.869Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "20250905184731_Albumcreated.cs",
+              "DocumentMoniker": "C:\\Users\\Acer\\Desktop\\UniTrack\\CET_Backend\\CET_Backend\\Migrations\\20250905184731_Albumcreated.cs",
+              "RelativeDocumentMoniker": "CET_Backend\\Migrations\\20250905184731_Albumcreated.cs",
+              "ToolTip": "C:\\Users\\Acer\\Desktop\\UniTrack\\CET_Backend\\CET_Backend\\Migrations\\20250905184731_Albumcreated.cs",
+              "RelativeToolTip": "CET_Backend\\Migrations\\20250905184731_Albumcreated.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-05T18:47:32.188Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "AppDbContext.cs",
+              "DocumentMoniker": "C:\\Users\\Acer\\Desktop\\UniTrack\\CET_Backend\\CET_Backend\\Data\\AppDbContext.cs",
+              "RelativeDocumentMoniker": "CET_Backend\\Data\\AppDbContext.cs",
+              "ToolTip": "C:\\Users\\Acer\\Desktop\\UniTrack\\CET_Backend\\CET_Backend\\Data\\AppDbContext.cs",
+              "RelativeToolTip": "CET_Backend\\Data\\AppDbContext.cs",
+              "ViewState": "AgIAAHAAAAAAAAAAAAAUwHwAAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-05T18:44:16.78Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "AlbumsController.cs",
+              "DocumentMoniker": "C:\\Users\\Acer\\Desktop\\UniTrack\\CET_Backend\\CET_Backend\\Controllers\\AlbumsController.cs",
+              "RelativeDocumentMoniker": "CET_Backend\\Controllers\\AlbumsController.cs",
+              "ToolTip": "C:\\Users\\Acer\\Desktop\\UniTrack\\CET_Backend\\CET_Backend\\Controllers\\AlbumsController.cs",
+              "RelativeToolTip": "CET_Backend\\Controllers\\AlbumsController.cs",
+              "ViewState": "AgIAAMsAAAAAAAAAAAAAAN4AAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-05T18:43:07.82Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

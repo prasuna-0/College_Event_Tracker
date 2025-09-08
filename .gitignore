@@ -1,0 +1,17 @@
+# React
+CET_Front/node_modules/
+CET_Front/build/
+CET_Front/dist/
+
+# ASP.NET Core
+CET_Backend/bin/
+CET_Backend/obj/
+CET_Backend/wwwroot/lib/
+
+# IDE/Editor
+.vscode/
+*.user
+*.suo
+
+# Env files
+*.env
