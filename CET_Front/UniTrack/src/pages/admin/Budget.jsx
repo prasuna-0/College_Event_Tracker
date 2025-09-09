@@ -158,7 +158,6 @@ export default function Budget() {
 
   return (
     <div style={{ padding: "20px", maxWidth: "800px", margin: "0 auto"  ,marginTop:"70px"}}>
-      {/* Allocate Budget Form */}
       <div
         style={{
           padding: "20px",
@@ -272,7 +271,6 @@ export default function Budget() {
         {message && <p style={{ marginTop: "10px", color: "red" }}>{message}</p>}
       </div>
 
-      {/* Separate tables per event */}
       {budgets.map((budget) => (
         <div
           key={budget.id}

@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-const API_BASE = "http://localhost:5226/api/budget"; // your backend base URL
+const API_BASE = "http://localhost:5226/api/budget"; 
 
 const BudgetSummary = ({ eventId, token }) => {
   const [budget, setBudget] = useState(null);
   const [allocateAmount, setAllocateAmount] = useState("");
   const [message, setMessage] = useState("");
 
-  // Fetch budget summary
+ 
   const fetchBudget = async () => {
     try {
       const res = await axios.get(`${API_BASE}/${eventId}/summary`, {
@@ -25,7 +25,7 @@ const BudgetSummary = ({ eventId, token }) => {
     fetchBudget();
   }, []);
 
-  // Handle budget allocation
+ 
   const handleAllocate = async () => {
     if (!allocateAmount) {
       setMessage("Enter estimated amount first!");

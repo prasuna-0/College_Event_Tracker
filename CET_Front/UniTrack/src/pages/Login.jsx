@@ -47,10 +47,8 @@ const handleSubmit = async (e) => {
       else if (role === "Coordinator") navigate("/coordinator");
       else navigate("/student");
     } else {
-      // Step 1: Register the user
       await axios.post("http://localhost:5226/api/Auth/register", form);
 
-      // Step 2: Automatically login after registration
       const res = await axios.post("http://localhost:5226/api/Auth/login", {
         username: form.username,
         password: form.password,

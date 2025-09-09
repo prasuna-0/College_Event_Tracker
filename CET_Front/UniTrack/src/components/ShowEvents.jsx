@@ -19,7 +19,7 @@ export default function AdminDashboard() {
     eventType: "",
     objective: "",
   });
-  const [teamDropdown, setTeamDropdown] = useState({}); // eventId -> selected team
+  const [teamDropdown, setTeamDropdown] = useState({}); 
 
   const token = localStorage.getItem("token");
 
@@ -53,7 +53,6 @@ export default function AdminDashboard() {
     }
   };
 
-  // ---------- ASSIGN TEAM ----------
   const handleAssignTeam = async (eventId, teamId) => {
     if (!teamId) return;
     try {
@@ -76,7 +75,6 @@ export default function AdminDashboard() {
     }
   };
 
-  // ---------- UNASSIGN TEAM ----------
   const handleUnassignTeam = async (eventId) => {
     try {
       await axios.delete(
@@ -93,7 +91,6 @@ export default function AdminDashboard() {
     }
   };
 
-  // ---------- DELETE ----------
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this event?")) return;
     try {
@@ -108,7 +105,6 @@ export default function AdminDashboard() {
     }
   };
 
-  // ---------- EDIT ----------
   const handleEditClick = (event) => {
     setEditingEvent({
       ...event,
@@ -144,7 +140,6 @@ export default function AdminDashboard() {
     }
   };
 
-  // ---------- ADD ----------
   const handleAdd = async () => {
     try {
       const payload = {

@@ -14,7 +14,7 @@ namespace CET_Backend.Entities
 
         [Required]
         [StringLength(100)]
-        public string Name { get; set; } = string.Empty; // e.g. Food, Venue, Printing
+        public string Name { get; set; } = string.Empty; 
 
         [Column(TypeName = "decimal(18,2)")]
         public decimal AllocatedAmount { get; set; }

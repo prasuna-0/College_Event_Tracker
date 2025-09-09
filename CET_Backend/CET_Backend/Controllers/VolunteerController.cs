@@ -17,13 +17,7 @@ namespace CET_Backend.Controllers
             _volunteerService = volunteerService;
         }
 
-        // DTOs
-        //public class VolunteerCreateDTO { public int StudentId { get; set; } }
-        //public class VolunteerUpdateDTO { public int StudentId { get; set; } }
-
-        // ========================
-        // GET
-        // ========================
+       
         [HttpGet]
         [Authorize(Roles = "Admin,Coordinator")]
         public async Task<IActionResult> GetAll()
@@ -41,9 +35,7 @@ namespace CET_Backend.Controllers
             return Ok(volunteer);
         }
 
-        // ========================
-        // CREATE
-        // ========================
+       
         [HttpPost]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([FromBody] VolunteerCreateDTO dto)
@@ -59,24 +51,6 @@ namespace CET_Backend.Controllers
             }
         }
 
-        // ========================
-        // UPDATE
-        // ========================
-        //[HttpPut("{id}")]
-        //[Authorize(Roles = "Admin")]
-        //public async Task<IActionResult> Update(int id, [FromBody] VolunteerUpdateDTO dto)
-        //{
-        //    try
-        //    {
-        //        var volunteer = await _volunteerService.UpdateVolunteerAsync(id, dto.StudentId);
-        //        if (volunteer == null) return NotFound(new { Message = "Volunteer not found." });
-        //        return Ok(volunteer);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(new { Error = ex.Message });
-        //    }
-        //}
         [HttpPut("{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(int id, [FromBody] VolunteerUpdateDTO dto)
@@ -94,9 +68,6 @@ namespace CET_Backend.Controllers
         }
 
 
-        // ========================
-        // DELETE
-        // ========================
         [HttpDelete("{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
@@ -106,9 +77,7 @@ namespace CET_Backend.Controllers
             return NoContent();
         }
 
-        // ========================
-        // Assign / Unassign Event
-        // ========================
+       
         [HttpPost("{volunteerId}/assign-event/{eventId}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AssignEvent(int volunteerId, int eventId, [FromQuery] string role = "Member")
@@ -139,9 +108,7 @@ namespace CET_Backend.Controllers
             }
         }
 
-        // ========================
-        // Assign / Unassign Team
-        // ========================
+       
         [HttpPost("{volunteerId}/assign-team/{teamId}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AssignTeam(int volunteerId, int teamId, [FromQuery] TeamRole role = TeamRole.Member)

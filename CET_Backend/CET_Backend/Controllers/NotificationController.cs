@@ -19,7 +19,6 @@ namespace CET_Backend.Controllers
             _notificationService = notificationService;
         }
 
-        // Get notifications for logged-in user
         [HttpGet]
         public async Task<IActionResult> GetNotifications()
         {
@@ -30,7 +29,6 @@ namespace CET_Backend.Controllers
             return Ok(notifications);
         }
 
-        // Mark notification as read
         [HttpPut("mark-as-read/{id}")]
         public async Task<IActionResult> MarkAsRead(int id)
         {
@@ -38,7 +36,6 @@ namespace CET_Backend.Controllers
             return NoContent();
         }
 
-        // Broadcast notification to all users (Admin only)
         [HttpPost("broadcast")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> BroadcastNotification([FromBody] BroadcastDto dto)

@@ -9,7 +9,6 @@ const MultiTeamManager = () => {
 
   const token = localStorage.getItem("token");
 
-  // Fetch all volunteers and teams on mount
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -38,7 +37,6 @@ const MultiTeamManager = () => {
     fetchData();
   }, [token]);
 
-  // Create new team
   const handleCreateTeam = async () => {
     if (!teamName) return;
     try {
@@ -56,7 +54,6 @@ const MultiTeamManager = () => {
     }
   };
 
-  // Delete team
   const handleDeleteTeam = async (teamId) => {
     try {
       await axios.delete(
@@ -71,7 +68,6 @@ const MultiTeamManager = () => {
     }
   };
 
-  // Assign volunteer
   const handleAssign = async (teamId, volunteer) => {
     try {
       await axios.post(
@@ -93,7 +89,6 @@ const MultiTeamManager = () => {
     }
   };
 
-  // Unassign volunteer
   const handleUnassign = async (teamId, volunteerId) => {
     try {
       await axios.post(
@@ -119,7 +114,6 @@ const MultiTeamManager = () => {
     <div style={styles.container}>
       <h2>Multi-Team Volunteer Manager</h2>
 
-      {/* Create Team Form */}
       <div style={styles.createTeamCard}>
         <h3>Create Team</h3>
         <input
@@ -134,7 +128,6 @@ const MultiTeamManager = () => {
         </button>
       </div>
 
-      {/* Teams List */}
       {teams.map((team) => (
         <div key={team.id} style={styles.card}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -147,7 +140,6 @@ const MultiTeamManager = () => {
             </button>
           </div>
 
-          {/* All volunteers list with Assign button */}
           <table style={styles.table}>
             <thead>
               <tr>
@@ -179,7 +171,6 @@ const MultiTeamManager = () => {
             </tbody>
           </table>
 
-          {/* Assigned volunteers with Unassign button */}
           {team.volunteers.length > 0 && (
             <>
               <h4>Assigned Volunteers</h4>
@@ -218,7 +209,6 @@ const MultiTeamManager = () => {
   );
 };
 
-// Internal CSS
 const styles = {
   container: { padding: "101px 75px", fontFamily:" Arial, sans-serif", /* margin: 95px 325px; */ marginLeft: "437px", width: "521px" },
   createTeamCard: { backgroundColor: "#000", color: "#fff", padding: "15px", marginBottom: "20px", borderRadius: "8px" },

@@ -30,7 +30,7 @@ const AddExpenseForm = ({ eventId, token, onExpenseAdded }) => {
       });
 
       setMessage("✅ Expense added successfully!");
-      onExpenseAdded(); // refresh parent state
+      onExpenseAdded(); 
       setTitle("");
       setAmount("");
     } catch (err) {

@@ -21,7 +21,6 @@ export default function AdminDashboardWithCalendar() {
     fetchEvents();
   }, []);
 
-  // Filter events by selected date (assuming event.startDate is in "YYYY-MM-DD" or similar)
   const filteredEvents = events.filter((event) =>
     dayjs(event.startDate).format("YYYY-MM-DD") === dayjs(selectedDate).format("YYYY-MM-DD")
   );

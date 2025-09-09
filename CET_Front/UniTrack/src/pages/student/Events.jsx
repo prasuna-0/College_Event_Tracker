@@ -12,7 +12,6 @@ export default function StudentEventFilter() {
     eventStatus: "",
   });
 
-  // Fetch events from backend
   useEffect(() => {
     const fetchEvents = async () => {
       try {
@@ -30,7 +29,6 @@ export default function StudentEventFilter() {
     fetchEvents();
   }, []);
 
-  // Apply filters whenever filters or events change
   useEffect(() => {
     let filtered = [...events];
 
@@ -56,7 +54,6 @@ export default function StudentEventFilter() {
     setFilteredEvents(filtered);
   }, [filters, events]);
 
-  // Generate unique years from events
   const years = Array.from(
     new Set(events.map((e) => new Date(e.startDate).getFullYear()))
   ).sort((a, b) => b - a); // descending order

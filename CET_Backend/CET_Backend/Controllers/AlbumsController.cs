@@ -19,58 +19,6 @@ namespace CET_Backend.Controllers
             _env = env;
         }
 
-        //[HttpPost("create")]
-        //public async Task<IActionResult> CreateOrAddToAlbum([FromForm] string name, IFormFile image)
-        //{
-        //    if (string.IsNullOrEmpty(name))
-        //        return BadRequest("Album name is required.");
-
-        //    if (image == null || image.Length == 0)
-        //        return BadRequest("No image uploaded.");
-
-        //    var uploadsFolder = Path.Combine(_env.WebRootPath ?? "wwwroot", "uploads");
-        //    if (!Directory.Exists(uploadsFolder))
-        //        Directory.CreateDirectory(uploadsFolder);
-
-        //    var uniqueFileName = Guid.NewGuid() + Path.GetExtension(image.FileName);
-        //    var filePath = Path.Combine(uploadsFolder, uniqueFileName);
-
-        //    using (var stream = new FileStream(filePath, FileMode.Create))
-        //    {
-        //        await image.CopyToAsync(stream);
-        //    }
-
-        //    var photo = new Photo
-        //    {
-        //        FileName = image.FileName,
-        //        FilePath = "/uploads/" + uniqueFileName,
-        //        UploadedAt = DateTime.Now
-        //    };
-
-        //    // 🔑 check if album already exists
-        //    var album = await _context.Albums
-        //        .Include(a => a.Photos)
-        //        .FirstOrDefaultAsync(a => a.Name.ToLower() == name.ToLower());
-
-        //    if (album != null)
-        //    {
-        //        album.Photos.Add(photo);
-        //        _context.Albums.Update(album);
-        //    }
-        //    else
-        //    {
-        //        album = new Album
-        //        {
-        //            Name = name,
-        //            CreatedAt = DateTime.Now,
-        //            Photos = new List<Photo> { photo }
-        //        };
-        //        _context.Albums.Add(album);
-        //    }
-
-        //    await _context.SaveChangesAsync();
-        //    return Ok(album);
-        //}
         [HttpPost("create")]
         public async Task<IActionResult> CreateOrAddToAlbum([FromForm] string name, IFormFile image)
         {

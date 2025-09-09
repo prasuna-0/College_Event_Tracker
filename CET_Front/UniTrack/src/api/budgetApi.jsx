@@ -1,8 +1,7 @@
 import axios from "axios";
 
-const API_BASE = "http://localhost:5226/api/budget/allocate"; // adjust if different
+const API_BASE = "http://localhost:5226/api/budget/allocate"; 
 
-// ===== Budget =====
 export const allocateBudget = (data, token) =>
   axios.post(`${API_BASE}/allocate`, data, { headers: { Authorization: `Bearer ${token}` } });
 
@@ -18,7 +17,6 @@ export const getBudgetByEvent = (eventId, token) =>
 export const getBudgetSummary = (eventId, token) =>
   axios.get(`${API_BASE}/${eventId}/summary`, { headers: { Authorization: `Bearer ${token}` } });
 
-// ===== Expenses =====
 export const getExpenses = (eventId, token) =>
   axios.get(`${API_BASE}/${eventId}/expenses`, { headers: { Authorization: `Bearer ${token}` } });
 
@@ -35,7 +33,6 @@ export const updateExpense = (eventId, expenseId, formData, token) =>
 export const deleteExpense = (eventId, expenseId, token) =>
   axios.delete(`${API_BASE}/${eventId}/expenses/${expenseId}`, { headers: { Authorization: `Bearer ${token}` } });
 
-// ===== Budget Heads =====
 export const getBudgetHeads = (budgetId, token) =>
   axios.get(`${API_BASE}/${budgetId}/heads`, { headers: { Authorization: `Bearer ${token}` } });
 

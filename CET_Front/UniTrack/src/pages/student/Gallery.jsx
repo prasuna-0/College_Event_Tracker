@@ -36,20 +36,9 @@ export default function CGallery() {
   style={styles.albumThumbnail}
 />
 
-
-         {/* <img
-  src={album.photos?.[0]?.url || "https://via.placeholder.com/80"}
-  alt={album.name}
-  style={styles.albumThumbnail}
-/> */}
-
             <span>{album.name}</span>
           </div>
-          {/* <FontAwesomeIcon
-            icon={faTrash}
-            style={{ color: "red", cursor: "pointer" }}
-            onClick={() => handleDeleteAlbum(album.id)}
-          /> */}
+         
         </div>
       ))}
     </div>

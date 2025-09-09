@@ -4,7 +4,6 @@ import axios from "axios";
 const CoordinatorNotifications = () => {
   const [notifications, setNotifications] = useState([]);
 
-  // Fetch notifications from backend
   const fetchNotifications = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -25,7 +24,6 @@ const CoordinatorNotifications = () => {
     fetchNotifications();
   }, []);
 
-  // Mark a notification as read
   const markAsRead = async (notificationUserId) => {
     try {
       const token = localStorage.getItem("token");

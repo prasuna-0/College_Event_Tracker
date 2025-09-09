@@ -11,7 +11,6 @@ export default function CCalendar() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [loading, setLoading] = useState(false);
 
-  // Fetch events when a date is selected
   const fetchEventsByDate = async (date) => {
     setLoading(true);
     try {
@@ -28,7 +27,6 @@ export default function CCalendar() {
     }
   };
 
-  // Fetch events for initial selected date on load
   useEffect(() => {
     fetchEventsByDate(selectedDate);
   }, [selectedDate]);
@@ -60,7 +58,6 @@ export default function CCalendar() {
             backgroundColor:"white",
             padding: "15px",
             margin: "10px auto",
-            // height:"100%",
             maxWidth: "600px",
             borderRadius: "8px",
             boxShadow: "0 0 5px rgba(0,0,0,0.1)",

@@ -1,515 +1,4 @@
-﻿//using CET_Backend.Enums;
-//using CET_Backend.Interfaces;
-//using CET_Backend.Models.DTOs;
-//using CET_Backend.Services;
-//using Microsoft.AspNetCore.Http;
-//using Microsoft.AspNetCore.Mvc;
-
-//namespace CET_Backend.Controllers
-//{
-//    [Route("api/[controller]")]
-//    [ApiController]
-//    public class EventsController : ControllerBase
-//    {
-
-//            private readonly IEventService _eventService;
-//            private readonly ILogger<EventsController> _logger;
-
-//            public EventsController(IEventService eventService, ILogger<EventsController> logger)
-//            {
-//                _eventService = eventService;
-//                _logger = logger;
-//            }
-
-//            /// <summary>
-//            /// Get all events
-//            /// </summary>
-//            /// <returns>List of all events</returns>
-//            [HttpGet]
-//            [ProducesResponseType(typeof(APIResponse<IEnumerable<EventDTO>>), 200)]
-//            public async Task<ActionResult<APIResponse<IEnumerable<EventDTO>>>> GetEvents()
-//            {
-//                try
-//                {
-//                    var events = await _eventService.GetAllEventsAsync();
-//                    var response = new APIResponse<IEnumerable<EventDTO>>
-//                    {
-//                        Success = true,
-//                        Message = "Events retrieved successfully",
-//                        Data = events
-//                    };
-//                    return Ok(response);
-//                }
-//                catch (Exception ex)
-//                {
-//                    _logger.LogError(ex, "Error retrieving events");
-//                    var response = new APIResponse<IEnumerable<EventDTO>>
-//                    {
-//                        Success = false,
-//                        Message = "An error occurred while retrieving events",
-//                        Errors = new List<string> { ex.Message }
-//                    };
-//                    return StatusCode(500, response);
-//                }
-//            }
-
-//            /// <summary>
-//            /// Get event by ID
-//            /// </summary>
-//            /// <param name="id">Event ID</param>
-//            /// <returns>Event details</returns>
-//            [HttpGet("{id}")]
-//            [ProducesResponseType(typeof(APIResponse<EventDTO>), 200)]
-//            [ProducesResponseType(typeof(APIResponse<EventDTO>), 404)]
-//            public async Task<ActionResult<APIResponse<EventDTO>>> GetEvent(int id)
-//            {
-//                try
-//                {
-//                    var eventDto = await _eventService.GetEventByIdAsync(id);
-//                    if (eventDto == null)
-//                    {
-//                        var notFoundResponse = new APIResponse<EventDTO>
-//                        {
-//                            Success = false,
-//                            Message = $"Event with ID {id} not found"
-//                        };
-//                        return NotFound(notFoundResponse);
-//                    }
-
-//                    var response = new APIResponse<EventDTO>
-//                    {
-//                        Success = true,
-//                        Message = "Event retrieved successfully",
-//                        Data = eventDto
-//                    };
-//                    return Ok(response);
-//                }
-//                catch (Exception ex)
-//                {
-//                    _logger.LogError(ex, "Error retrieving event with ID {EventId}", id);
-//                    var response = new APIResponse<EventDTO>
-//                    {
-//                        Success = false,
-//                        Message = "An error occurred while retrieving the event",
-//                        Errors = new List<string> { ex.Message }
-//                    };
-//                    return StatusCode(500, response);
-//                }
-//            }
-
-//            /// <summary>
-//            /// Create a new event
-//            /// </summary>
-//            /// <param name="createEventDto">Event creation request</param>
-//            /// <returns>Created event</returns>
-//            [HttpPost]
-//            [ProducesResponseType(typeof(APIResponse<EventDTO>), 201)]
-//            [ProducesResponseType(typeof(APIResponse<EventDTO>), 400)]
-//            public async Task<ActionResult<APIResponse<EventDTO>>> CreateEvent([FromBody] CreateEventDto createEventDto)
-//            {
-//                try
-//                {
-//                    if (!ModelState.IsValid)
-//                    {
-//                        var errors = ModelState.Values
-//                            .SelectMany(v => v.Errors)
-//                            .Select(e => e.ErrorMessage)
-//                        .ToList();
-
-//                        var validationResponse = new APIResponse<EventDTO>
-//                        {
-//                            Success = false,
-//                            Message = "Validation failed",
-//                            Errors = errors
-//                        };
-//                        return BadRequest(validationResponse);
-//                    }
-
-//                    // Custom validation for date range
-//                    if (createEventDto.StartDate >= createEventDto.EndDate)
-//                    {
-//                        var dateValidationResponse = new APIResponse<EventDTO>
-//                        {
-//                            Success = false,
-//                            Message = "Validation failed",
-//                            Errors = new List<string> { "End date must be after start date" }
-//                        };
-//                        return BadRequest(dateValidationResponse);
-//                    }
-
-//                    // Validate enum values
-//                    var validationErrors = ValidateEnumValues(createEventDto.Faculty, createEventDto.EventScope, createEventDto.EventStatus);
-//                    if (validationErrors.Any())
-//                    {
-//                        var enumValidationResponse = new APIResponse<EventDTO>
-//                        {
-//                            Success = false,
-//                            Message = "Validation failed",
-//                            Errors = validationErrors
-//                        };
-//                        return BadRequest(enumValidationResponse);
-//                    }
-
-//                    var newEvent = await _eventService.CreateEventAsync(createEventDto);
-//                    var response = new APIResponse<EventDTO>
-//                    {
-//                        Success = true,
-//                        Message = "Event created successfully",
-//                        Data = newEvent
-//                    };
-
-//                    _logger.LogInformation("Event created with ID {EventId}", newEvent.Id);
-//                    return CreatedAtAction(nameof(GetEvent), new { id = newEvent.Id }, response);
-//                }
-//                catch (Exception ex)
-//                {
-//                    _logger.LogError(ex, "Error creating event");
-//                    var response = new APIResponse<EventDTO>
-//                    {
-//                        Success = false,
-//                        Message = "An error occurred while creating the event",
-//                        Errors = new List<string> { ex.Message }
-//                    };
-//                    return StatusCode(500, response);
-//                }
-//            }
-
-//            /// <summary>
-//            /// Update an existing event
-//            /// </summary>
-//            /// <param name="id">Event ID</param>
-//            /// <param name="updateEventDto">Event update request</param>
-//            /// <returns>Updated event</returns>
-//            [HttpPut("{id}")]
-//            [ProducesResponseType(typeof(APIResponse<EventDTO>), 200)]
-//            [ProducesResponseType(typeof(APIResponse<EventDTO>), 400)]
-//            [ProducesResponseType(typeof(APIResponse<EventDTO>), 404)]
-//            public async Task<ActionResult<APIResponse<EventDTO>>> UpdateEvent(int id, [FromBody] UpdateEventDto updateEventDto)
-//            {
-//                try
-//                {
-//                    if (!ModelState.IsValid)
-//                    {
-//                        var errors = ModelState.Values
-//                            .SelectMany(v => v.Errors)
-//                            .Select(e => e.ErrorMessage)
-//                        .ToList();
-
-//                        var validationResponse = new APIResponse<EventDTO>
-//                        {
-//                            Success = false,
-//                            Message = "Validation failed",
-//                            Errors = errors
-//                        };
-//                        return BadRequest(validationResponse);
-//                    }
-
-//                    // Custom validation for date range
-//                    if (updateEventDto.StartDate >= updateEventDto.EndDate)
-//                    {
-//                        var dateValidationResponse = new APIResponse<EventDTO>
-//                        {
-//                            Success = false,
-//                            Message = "Validation failed",
-//                            Errors = new List<string> { "End date must be after start date" }
-//                        };
-//                        return BadRequest(dateValidationResponse);
-//                    }
-
-//                    // Validate enum values
-//                    var validationErrors = ValidateEnumValues(updateEventDto.Faculty, updateEventDto.EventScope, updateEventDto.EventStatus);
-//                    if (validationErrors.Any())
-//                    {
-//                        var enumValidationResponse = new APIResponse<EventDTO>
-//                        {
-//                            Success = false,
-//                            Message = "Validation failed",
-//                            Errors = validationErrors
-//                        };
-//                        return BadRequest(enumValidationResponse);
-//                    }
-
-//                    var updatedEvent = await _eventService.UpdateEventAsync(id, updateEventDto);
-//                    if (updatedEvent == null)
-//                    {
-//                        var notFoundResponse = new APIResponse<EventDTO>
-//                        {
-//                            Success = false,
-//                            Message = $"Event with ID {id} not found"
-//                        };
-//                        return NotFound(notFoundResponse);
-//                    }
-
-//                    var response = new APIResponse<EventDTO>
-//                    {
-//                        Success = true,
-//                        Message = "Event updated successfully",
-//                        Data = updatedEvent
-//                    };
-
-//                    _logger.LogInformation("Event updated with ID {EventId}", id);
-//                    return Ok(response);
-//                }
-//                catch (Exception ex)
-//                {
-//                    _logger.LogError(ex, "Error updating event with ID {EventId}", id);
-//                    var response = new APIResponse<EventDTO>
-//                    {
-//                        Success = false,
-//                        Message = "An error occurred while updating the event",
-//                        Errors = new List<string> { ex.Message }
-//                    };
-//                    return StatusCode(500, response);
-//                }
-//            }
-
-//            /// <summary>
-//            /// Delete an event
-//            /// </summary>
-//            /// <param name="id">Event ID</param>
-//            /// <returns>Success response</returns>
-//            [HttpDelete("{id}")]
-//            [ProducesResponseType(typeof(APIResponse), 200)]
-//            [ProducesResponseType(typeof(APIResponse), 404)]
-//            public async Task<ActionResult<APIResponse>> DeleteEvent(int id)
-//            {
-//                try
-//                {
-//                    var deleted = await _eventService.DeleteEventAsync(id);
-//                    if (!deleted)
-//                    {
-//                        var notFoundResponse = new APIResponse
-//                        {
-//                            Success = false,
-//                            Message = $"Event with ID {id} not found"
-//                        };
-//                        return NotFound(notFoundResponse);
-//                    }
-
-//                    var response = new APIResponse
-//                    {
-//                        Success = true,
-//                        Message = "Event deleted successfully"
-//                    };
-
-//                    _logger.LogInformation("Event deleted with ID {EventId}", id);
-//                    return Ok(response);
-//                }
-//                catch (Exception ex)
-//                {
-//                    _logger.LogError(ex, "Error deleting event with ID {EventId}", id);
-//                    var response = new APIResponse
-//                    {
-//                        Success = false,
-//                        Message = "An error occurred while deleting the event",
-//                        Errors = new List<string> { ex.Message }
-//                    };
-//                    return StatusCode(500, response);
-//                }
-//            }
-
-//        /// <summary>
-//        /// Get events by faculty
-//        /// </summary>
-//        /// <param name="faculty">Faculty name</param>
-//        /// <returns>List of events for the specified faculty</returns>
-//        //[HttpGet("faculty/{faculty}")]
-//        //[ProducesResponseType(typeof(APIResponse<IEnumerable<EventDTO>>), 200)]
-//        //public async Task<ActionResult<APIResponse<IEnumerable<EventDTO>>>> GetEventsByFaculty(string faculty)
-//        //{
-//        //    try
-//        //    {
-//        //        var events = await _eventService.GetEventsByFacultyAsync(faculty);
-//        //        var response = new APIResponse<IEnumerable<EventDTO>>
-//        //        {
-//        //            Success = true,
-//        //            Message = $"Events for faculty {faculty} retrieved successfully",
-//        //            Data = events
-//        //        };
-//        //        return Ok(response);
-//        //    }
-//        //    catch (Exception ex)
-//        //    {
-//        //        _logger.LogError(ex, "Error retrieving events for faculty {Faculty}", faculty);
-//        //        var response = new APIResponse<IEnumerable<EventDTO>>
-//        //        {
-//        //            Success = false,
-//        //            Message = "An error occurred while retrieving events",
-//        //            Errors = new List<string> { ex.Message }
-//        //        };
-//        //        return StatusCode(500, response);
-//        //    }
-//        //}
-//        [HttpGet("faculty/{faculty}")]
-//        public async Task<ActionResult<APIResponse<IEnumerable<EventDTO>>>> GetEventsByFaculty(string faculty)
-//        {
-//            try
-//            {
-//                IEnumerable<EventDTO> events;
-
-//                if (string.Equals(faculty, "All", StringComparison.OrdinalIgnoreCase))
-//                {
-//                    // Return all events if 'All' is passed
-//                    events = await _eventService.GetAllEventsAsync();
-//                }
-//                else
-//                {
-//                    events = await _eventService.GetEventsByFacultyAsync(faculty);
-//                }
-
-//                var response = new APIResponse<IEnumerable<EventDTO>>
-//                {
-//                    Success = true,
-//                    Message = $"Events for faculty {faculty} retrieved successfully",
-//                    Data = events
-//                };
-
-//                return Ok(response);
-//            }
-//            catch (Exception ex)
-//            {
-//                _logger.LogError(ex, "Error retrieving events for faculty {Faculty}", faculty);
-
-//                var response = new APIResponse<IEnumerable<EventDTO>>
-//                {
-//                    Success = false,
-//                    Message = "An error occurred while retrieving events",
-//                    Errors = new List<string> { ex.Message }
-//                };
-
-//                return StatusCode(500, response);
-//            }
-//        }
-
-
-
-//        /// <summary>
-//        /// Get events by scope
-//        /// </summary>
-//        /// <param name="scope">Event scope</param>
-//        /// <returns>List of events for the specified scope</returns>
-//        [HttpGet("scope/{scope}")]
-//            [ProducesResponseType(typeof(APIResponse<IEnumerable<EventDTO>>), 200)]
-//            public async Task<ActionResult<APIResponse<IEnumerable<EventDTO>>>> GetEventsByScope(string scope)
-//            {
-//                try
-//                {
-//                    var events = await _eventService.GetEventsByScopeAsync(scope);
-//                    var response = new APIResponse<IEnumerable<EventDTO>>
-//                    {
-//                        Success = true,
-//                        Message = $"Events for scope {scope} retrieved successfully",
-//                        Data = events
-//                    };
-//                    return Ok(response);
-//                }
-//                catch (Exception ex)
-//                {
-//                    _logger.LogError(ex, "Error retrieving events for scope {Scope}", scope);
-//                    var response = new APIResponse<IEnumerable<EventDTO>>
-//                    {
-//                        Success = false,
-//                        Message = "An error occurred while retrieving events",
-//                        Errors = new List<string> { ex.Message }
-//                    };
-//                    return StatusCode(500, response);
-//                }
-//            }
-
-//            /// <summary>
-//            /// Get events by status
-//            /// </summary>
-//            /// <param name="status">Event status</param>
-//            /// <returns>List of events for the specified status</returns>
-//            [HttpGet("status/{status}")]
-//            [ProducesResponseType(typeof(APIResponse<IEnumerable<EventDTO>>), 200)]
-//            public async Task<ActionResult<APIResponse<IEnumerable<EventDTO>>>> GetEventsByStatus(string status)
-//            {
-//                try
-//                {
-//                    var events = await _eventService.GetEventsByStatusAsync(status);
-//                    var response = new APIResponse<IEnumerable<EventDTO>>
-//                    {
-//                        Success = true,
-//                        Message = $"Events with status {status} retrieved successfully",
-//                        Data = events
-//                    };
-//                    return Ok(response);
-//                }
-//                catch (Exception ex)
-//                {
-//                    _logger.LogError(ex, "Error retrieving events for status {Status}", status);
-//                    var response = new APIResponse<IEnumerable<EventDTO>>
-//                    {
-//                        Success = false,
-//                        Message = "An error occurred while retrieving events",
-//                        Errors = new List<string> { ex.Message }
-//                    };
-//                    return StatusCode(500, response);
-//                }
-//            }
-
-//            /// <summary>
-//            /// Get upcoming events
-//            /// </summary>
-//            /// <returns>List of upcoming events</returns>
-//            [HttpGet("upcoming")]
-//            [ProducesResponseType(typeof(APIResponse<IEnumerable<EventDTO>>), 200)]
-//            public async Task<ActionResult<APIResponse<IEnumerable<EventDTO>>>> GetUpcomingEvents()
-//            {
-//                try
-//                {
-//                    var events = await _eventService.GetUpcomingEventsAsync();
-//                    var response = new APIResponse<IEnumerable<EventDTO>>
-//                    {
-//                        Success = true,
-//                        Message = "Upcoming events retrieved successfully",
-//                        Data = events
-//                    };
-//                    return Ok(response);
-//                }
-//                catch (Exception ex)
-//                {
-//                    _logger.LogError(ex, "Error retrieving upcoming events");
-//                    var response = new APIResponse<IEnumerable<EventDTO>>
-//                    {
-//                        Success = false,
-//                        Message = "An error occurred while retrieving upcoming events",
-//                        Errors = new List<string> { ex.Message }
-//                    };
-//                    return StatusCode(500, response);
-//                }
-//            }
-
-//            private static List<string> ValidateEnumValues(string faculty, string eventScope, string eventStatus)
-//            {
-//                var errors = new List<string>();
-
-//                // Validate Faculty
-//                var validFaculties = new[] { "BIM", "BSCCSIT", "BHM", "BBS", "BCA" };
-//                if (!validFaculties.Contains(faculty, StringComparer.OrdinalIgnoreCase))
-//                {
-//                    errors.Add("Invalid faculty. Must be one of: BIM, BSCCSIT, BHM, BBS, BCA");
-//                }
-
-//                // Validate EventScope
-//                var validScopes = new[] { "Intercollege", "Collegelevel", "Facultylevel" };
-//                if (!validScopes.Contains(eventScope, StringComparer.OrdinalIgnoreCase))
-//                {
-//                    errors.Add("Invalid event scope. Must be one of: Intercollege, Collegelevel, Facultylevel");
-//                }
-
-//                // Validate EventStatus
-//                var validStatuses = new[] { "Planned", "Active", "Completed", "Cancelled" };
-//                if (!validStatuses.Contains(eventStatus, StringComparer.OrdinalIgnoreCase))
-//                {
-//                    errors.Add("Invalid event status. Must be one of: Planned, Active, Completed, Cancelled");
-//                }
-
-//                return errors;
-//            }
-//        }
-//    }
+﻿
 using CET_Backend.Enums;
 using CET_Backend.Interfaces;
 using CET_Backend.Models.DTOs;
@@ -537,10 +26,7 @@ namespace CET_Backend.Controllers
             _logger = logger;
         }
 
-        /// <summary>
-        /// Get all events
-        /// </summary>
-        /// <returns>List of all events</returns>
+        
         [HttpGet]
         [ProducesResponseType(typeof(APIResponse<IEnumerable<EventDTO>>), 200)]
         public async Task<ActionResult<APIResponse<IEnumerable<EventDTO>>>> GetEvents()
@@ -607,11 +93,7 @@ namespace CET_Backend.Controllers
                 });
             }
         }
-        /// <summary>
-        /// Get event by ID
-        /// </summary>
-        /// <param name="id">Event ID</param>
-        /// <returns>Event details</returns>
+       
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(APIResponse<EventDTO>), 200)]
         [ProducesResponseType(typeof(APIResponse<EventDTO>), 404)]
@@ -651,11 +133,7 @@ namespace CET_Backend.Controllers
             }
         }
 
-        /// <summary>
-        /// Create a new event
-        /// </summary>
-        /// <param name="createEventDto">Event creation request</param>
-        /// <returns>Created event</returns>
+       
         [HttpPost]
         [ProducesResponseType(typeof(APIResponse<EventDTO>), 201)]
         [ProducesResponseType(typeof(APIResponse<EventDTO>), 400)]
@@ -679,7 +157,6 @@ namespace CET_Backend.Controllers
                     return BadRequest(validationResponse);
                 }
 
-                // Custom validation for date range
                 if (createEventDto.StartDate >= createEventDto.EndDate)
                 {
                     var dateValidationResponse = new APIResponse<EventDTO>
@@ -691,7 +168,6 @@ namespace CET_Backend.Controllers
                     return BadRequest(dateValidationResponse);
                 }
 
-                // Validate enum values including "All" and "Upcoming"
                 var validationErrors = ValidateEnumValues(createEventDto.Faculty, createEventDto.EventScope, createEventDto.EventStatus);
                 if (validationErrors.Any())
                 {
@@ -728,12 +204,7 @@ namespace CET_Backend.Controllers
             }
         }
 
-        /// <summary>
-        /// Update an existing event
-        /// </summary>
-        /// <param name="id">Event ID</param>
-        /// <param name="updateEventDto">Event update request</param>
-        /// <returns>Updated event</returns>
+       
         [HttpPut("{id}")]
         [ProducesResponseType(typeof(APIResponse<EventDTO>), 200)]
         [ProducesResponseType(typeof(APIResponse<EventDTO>), 400)]
@@ -758,7 +229,6 @@ namespace CET_Backend.Controllers
                     return BadRequest(validationResponse);
                 }
 
-                // Custom validation for date range
                 if (updateEventDto.StartDate >= updateEventDto.EndDate)
                 {
                     var dateValidationResponse = new APIResponse<EventDTO>
@@ -770,7 +240,6 @@ namespace CET_Backend.Controllers
                     return BadRequest(dateValidationResponse);
                 }
 
-                // Validate enum values including "All" and "Upcoming"
                 var validationErrors = ValidateEnumValues(updateEventDto.Faculty, updateEventDto.EventScope, updateEventDto.EventStatus);
                 if (validationErrors.Any())
                 {
@@ -817,11 +286,7 @@ namespace CET_Backend.Controllers
             }
         }
 
-        /// <summary>
-        /// Delete an event
-        /// </summary>
-        /// <param name="id">Event ID</param>
-        /// <returns>Success response</returns>
+       
         [HttpDelete("{id}")]
         [ProducesResponseType(typeof(APIResponse), 200)]
         [ProducesResponseType(typeof(APIResponse), 404)]
@@ -862,11 +327,7 @@ namespace CET_Backend.Controllers
             }
         }
 
-        /// <summary>
-        /// Get events by faculty
-        /// </summary>
-        /// <param name="faculty">Faculty name</param>
-        /// <returns>List of events for the specified faculty</returns>
+        
         [HttpGet("faculty/{faculty}")]
         public async Task<ActionResult<APIResponse<IEnumerable<EventDTO>>>> GetEventsByFaculty(string faculty)
         {
@@ -906,11 +367,7 @@ namespace CET_Backend.Controllers
             }
         }
 
-        /// <summary>
-        /// Get events by scope
-        /// </summary>
-        /// <param name="scope">Event scope</param>
-        /// <returns>List of events for the specified scope</returns>
+        
         [HttpGet("scope/{scope}")]
         [ProducesResponseType(typeof(APIResponse<IEnumerable<EventDTO>>), 200)]
         public async Task<ActionResult<APIResponse<IEnumerable<EventDTO>>>> GetEventsByScope(string scope)
@@ -939,11 +396,7 @@ namespace CET_Backend.Controllers
             }
         }
 
-        /// <summary>
-        /// Get events by status
-        /// </summary>
-        /// <param name="status">Event status</param>
-        /// <returns>List of events for the specified status</returns>
+        
         [HttpGet("status/{status}")]
         [ProducesResponseType(typeof(APIResponse<IEnumerable<EventDTO>>), 200)]
         public async Task<ActionResult<APIResponse<IEnumerable<EventDTO>>>> GetEventsByStatus(string status)
@@ -982,10 +435,7 @@ namespace CET_Backend.Controllers
             }
         }
 
-        /// <summary>
-        /// Get upcoming events
-        /// </summary>
-        /// <returns>List of upcoming events</returns>
+       
         [HttpGet("upcoming")]
         [ProducesResponseType(typeof(APIResponse<IEnumerable<EventDTO>>), 200)]
         public async Task<ActionResult<APIResponse<IEnumerable<EventDTO>>>> GetUpcomingEvents()
@@ -1018,7 +468,6 @@ namespace CET_Backend.Controllers
         {
             var errors = new List<string>();
 
-            // Allow "All" faculty
             var validFaculties = new[] { "All", "BIM", "BSCCSIT", "BHM", "BBS", "BCA" };
             if (!validFaculties.Contains(faculty, StringComparer.OrdinalIgnoreCase))
             {
@@ -1031,7 +480,6 @@ namespace CET_Backend.Controllers
                 errors.Add("Invalid event scope. Must be one of: Intercollege, Collegelevel, Facultylevel");
             }
 
-            // Allow "Upcoming" status
             var validStatuses = new[] { "Upcoming", "Planned", "Active", "Completed", "Cancelled" };
             if (!validStatuses.Contains(eventStatus, StringComparer.OrdinalIgnoreCase))
             {

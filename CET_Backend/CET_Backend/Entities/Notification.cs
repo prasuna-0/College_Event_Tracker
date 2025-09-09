@@ -6,7 +6,7 @@
         public string Title { get; set; } = string.Empty;
         public string Message { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public int? EventId { get; set; }    // optional reference
+        public int? EventId { get; set; }    
         public int? BudgetId { get; set; }
 
         public ICollection<NotificationUser> NotificationUsers { get; set; } = new List<NotificationUser>();

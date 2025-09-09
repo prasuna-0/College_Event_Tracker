@@ -5,11 +5,9 @@ namespace CET_Backend.Entities
     public class Volunteer
     {
         public int Id { get; set; }
-        public int SID { get; set; } // Link to Student (User)
+        public int SID { get; set; } 
         [ForeignKey("SID")]
-        public Student? Student { get; set; }  // Navigation property
-
-        // Optional: Role in event or team
+        public Student? Student { get; set; }  
         public string? RoleInEvent { get; set; }
 
         public string Name { get; set; } = string.Empty;

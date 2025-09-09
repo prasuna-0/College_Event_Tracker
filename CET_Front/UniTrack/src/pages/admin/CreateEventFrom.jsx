@@ -119,7 +119,7 @@ const handleSubmit = async (e) => {
         <option value="BIM">BIM</option>
         <option value="BCA">BCA</option>
         <option value="BBS">BBS</option>
-        <option value="HM">HM</option>
+        <option value="HM">BHM</option>
       </select>
 
       <label style={labelStyle}>Scope</label>

@@ -12,7 +12,6 @@ namespace CET_Backend.Interfaces
         Task<IEnumerable<User>> GetUsersByRoleAsync(string role);
         Task<IEnumerable<User>> GetAllUsersAsync();
 
-        // Optional admin methods
         Task DeleteNotificationAsync(int notificationId);
         Task BroadcastNotificationAsync(Notification notification, string? role = null);
     }

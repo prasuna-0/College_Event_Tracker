@@ -4,7 +4,6 @@ import axios from "axios";
 const StudentNotifications = () => {
   const [notifications, setNotifications] = useState([]);
 
-  // Fetch notifications for logged-in student
   const fetchNotifications = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -34,7 +33,6 @@ const StudentNotifications = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      // Update local state
       setNotifications((prev) =>
         prev.map((n) =>
           n.id === notificationUserId ? { ...n, isRead: true } : n

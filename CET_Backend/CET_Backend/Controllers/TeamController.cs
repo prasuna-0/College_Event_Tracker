@@ -21,9 +21,8 @@ namespace CET_Backend.Controllers
             _teamService = teamService;
         }
   
-        // GET: api/Team
         [HttpGet]
-        [Authorize(Roles = "Admin,Coordinator")] // Admin and Coordinator can read
+        [Authorize(Roles = "Admin,Coordinator")] 
         public async Task<IActionResult> GetAll()
         {
             var teams = await _teamService.GetAllTeamsAsync();
@@ -33,7 +32,7 @@ namespace CET_Backend.Controllers
         public async Task<IActionResult> GetTeamMembers(int teamId)
         {
             var team = await _context.Teams
-                .Include(t => t.Members) // Members navigation property
+                .Include(t => t.Members) 
                 .FirstOrDefaultAsync(t => t.Id == teamId);
 
             if (team == null) return NotFound();
@@ -42,7 +41,6 @@ namespace CET_Backend.Controllers
             return Ok(members);
         }
 
-        // GET: api/Team/{id}
         [HttpGet("{id}")]
         [Authorize(Roles = "Admin,Coordinator")]
         public async Task<IActionResult> GetById(int id)
@@ -52,16 +50,14 @@ namespace CET_Backend.Controllers
             return Ok(team);
         }
 
-        // POST: api/Team
         [HttpPost]
-        [Authorize(Roles = "Admin")] // Only Admin can create
+        [Authorize(Roles = "Admin")] 
         public async Task<IActionResult> Create([FromBody] Team team)
         {
             var created = await _teamService.CreateTeamAsync(team);
             return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
         }
 
-        // PUT: api/Team/{id}
         [HttpPut("{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(int id, [FromBody] Team team)
@@ -71,7 +67,6 @@ namespace CET_Backend.Controllers
             return Ok(updated);
         }
 
-        // DELETE: api/Team/{id}
         [HttpDelete("{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
@@ -81,7 +76,6 @@ namespace CET_Backend.Controllers
             return NoContent();
         }
 
-        // POST: api/Team/assign-volunteer
         [HttpPost("assign-volunteer")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AssignVolunteer(int volunteerId, int teamId, TeamRole role)
@@ -90,7 +84,6 @@ namespace CET_Backend.Controllers
             return Ok(new { message = $"Volunteer {volunteerId} assigned to team {teamId} as {role}" });
         }
 
-        // POST: api/Team/unassign-volunteer
         [HttpPost("unassign-volunteer")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UnassignVolunteer(int volunteerId, int teamId)
