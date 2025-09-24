@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-const StudentNotifications = () => {
+export default function Notifications() {
   const [notifications, setNotifications] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   const fetchNotifications = async () => {
     try {
@@ -14,8 +16,30 @@ const StudentNotifications = () => {
       });
 
       setNotifications(res.data);
+      setLoading(false);
     } catch (err) {
-      console.error("Error fetching notifications:", err);
+      console.error("Fetch notifications error:", err);
+      setError("❌ Failed to fetch notifications");
+      setLoading(false);
+    }
+  };
+
+  const markAsRead = async (notificationId) => {
+    try {
+      const token = localStorage.getItem("token");
+      await axios.put(
+        `http://localhost:5226/api/Notification/mark-as-read/${notificationId}`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      setNotifications((prev) =>
+        prev.map((n) =>
+          n.id === notificationId ? { ...n, isRead: true } : n
+        )
+      );
+    } catch (err) {
+      console.error("Mark as read error:", err);
     }
   };
 
@@ -23,83 +47,84 @@ const StudentNotifications = () => {
     fetchNotifications();
   }, []);
 
-  // Mark notification as read
-  const markAsRead = async (notificationUserId) => {
-    try {
-      const token = localStorage.getItem("token");
-      await axios.put(
-        `http://localhost:5226/api/Notification/mark-as-read/${notificationUserId}`,
-        {},
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-
-      setNotifications((prev) =>
-        prev.map((n) =>
-          n.id === notificationUserId ? { ...n, isRead: true } : n
-        )
-      );
-    } catch (err) {
-      console.error("Error marking notification as read:", err);
-    }
-  };
-
-  // Internal CSS
+  // Styles
   const containerStyle = {
     padding: "20px",
-    maxWidth: "600px",
-    margin: "90px auto",
-    fontFamily: "Arial, sans-serif",
+    maxWidth: "700px",
+    margin: "40px auto",
+    fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
   };
 
   const cardStyle = (isRead) => ({
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
     border: "1px solid #ccc",
-    padding: "15px",
-    marginBottom: "10px",
-    borderRadius: "5px",
-    backgroundColor: isRead ? "#e0e0e0" : "#f9f9f9",
+    padding: "15px 20px",
+    marginBottom: "15px",
+    borderRadius: "10px",
+    backgroundColor: isRead ? "#f0f0f0" : "#ffffff",
+    boxShadow: "0 4px 8px rgba(0,0,0,0.05)",
+    transition: "transform 0.2s, box-shadow 0.2s",
   });
 
-  const titleStyle = { margin: "0 0 5px 0", fontSize: "16px", fontWeight: "bold" };
-  const messageStyle = { margin: "0 0 5px 0", fontSize: "14px" };
-  const dateStyle = { color: "#555", fontSize: "12px" };
-  const headerStyle = { textAlign: "center", marginBottom: "20px" };
+  const cardContentStyle = { maxWidth: "80%" };
+  const titleStyle = { margin: "0 0 8px 0", fontSize: "17px", fontWeight: "600", color: "#333" };
+  const messageStyle = { margin: 0, fontSize: "14px", color: "#555" };
+  const dateStyle = { color: "#888", fontSize: "12px", marginTop: "6px" };
+  const markButtonStyle = {
+    padding: "6px 12px",
+    fontSize: "13px",
+    cursor: "pointer",
+    backgroundColor: "#2563eb",
+    color: "white",
+    borderRadius: "5px",
+    border: "none",
+    alignSelf: "flex-start",
+  };
+  const headerStyle = { textAlign: "center", marginBottom: "25px" };
+
+  if (loading) return <p style={{ textAlign: "center" }}>Loading notifications...</p>;
+  if (error) return <p style={{ textAlign: "center", color: "red" }}>{error}</p>;
 
   return (
-    <div style={containerStyle}>
-      <h2 style={headerStyle}>Notifications</h2>
-      {notifications.length === 0 && <p>No notifications available.</p>}
+    <div style={{ minHeight: "100vh", backgroundColor: "#f5f6f7", padding: "20px" }}>
+      <div style={containerStyle}>
+        <h2 style={headerStyle}>My Notifications</h2>
 
-      {notifications.map((notif) => (
-        <div key={notif.id} style={cardStyle(notif.isRead)}>
-          <h4 style={titleStyle}>{notif.notification.title}</h4>
-          <p style={messageStyle}>{notif.notification.message}</p>
-          <small style={dateStyle}>
-            {new Date(notif.notification.createdAt).toLocaleString()}
-          </small>
-          {!notif.isRead && (
-            <div>
+        {notifications.length === 0 && <p>No notifications available.</p>}
+
+        {notifications.map((notif) => (
+          <div
+            key={notif.id}
+            style={cardStyle(notif.isRead)}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = "scale(1.02)";
+              e.currentTarget.style.boxShadow = "0 6px 12px rgba(0,0,0,0.1)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = "scale(1)";
+              e.currentTarget.style.boxShadow = "0 4px 8px rgba(0,0,0,0.05)";
+            }}
+          >
+            <div style={cardContentStyle}>
+              <h4 style={titleStyle}>{notif.title}</h4>
+              <p style={messageStyle}>{notif.message}</p>
+              <small style={dateStyle}>
+                {notif.createdAt ? new Date(notif.createdAt).toLocaleString() : ""}
+              </small>
+            </div>
+            {!notif.isRead && (
               <button
+                style={markButtonStyle}
                 onClick={() => markAsRead(notif.id)}
-                style={{
-                 marginTop: "8px",
-                padding: "5px 10px",
-                marginLeft:"450px",
-                fontSize: "12px",
-                cursor: "pointer",
-                backgroundColor:"blue",
-                  color:"white",
-                  borderRadius:"5px",
-                  border:"none"
-                }}
               >
                 Mark as Read
               </button>
-            </div>
-          )}
-        </div>
-      ))}
+            )}
+          </div>
+        ))}
+      </div>
     </div>
   );
-};
-
-export default StudentNotifications;
+}

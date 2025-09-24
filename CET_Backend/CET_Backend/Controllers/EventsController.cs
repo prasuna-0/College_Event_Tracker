@@ -1,4 +1,5 @@
 ﻿
+using CET_Backend.Data;
 using CET_Backend.Enums;
 using CET_Backend.Interfaces;
 using CET_Backend.Models.DTOs;
@@ -6,9 +7,11 @@ using CET_Backend.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace CET_Backend.Controllers
@@ -26,7 +29,7 @@ namespace CET_Backend.Controllers
             _logger = logger;
         }
 
-        
+
         [HttpGet]
         [ProducesResponseType(typeof(APIResponse<IEnumerable<EventDTO>>), 200)]
         public async Task<ActionResult<APIResponse<IEnumerable<EventDTO>>>> GetEvents()
@@ -93,7 +96,7 @@ namespace CET_Backend.Controllers
                 });
             }
         }
-       
+
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(APIResponse<EventDTO>), 200)]
         [ProducesResponseType(typeof(APIResponse<EventDTO>), 404)]
@@ -133,7 +136,7 @@ namespace CET_Backend.Controllers
             }
         }
 
-       
+
         [HttpPost]
         [ProducesResponseType(typeof(APIResponse<EventDTO>), 201)]
         [ProducesResponseType(typeof(APIResponse<EventDTO>), 400)]
@@ -204,7 +207,7 @@ namespace CET_Backend.Controllers
             }
         }
 
-       
+
         [HttpPut("{id}")]
         [ProducesResponseType(typeof(APIResponse<EventDTO>), 200)]
         [ProducesResponseType(typeof(APIResponse<EventDTO>), 400)]
@@ -286,7 +289,7 @@ namespace CET_Backend.Controllers
             }
         }
 
-       
+
         [HttpDelete("{id}")]
         [ProducesResponseType(typeof(APIResponse), 200)]
         [ProducesResponseType(typeof(APIResponse), 404)]
@@ -327,7 +330,7 @@ namespace CET_Backend.Controllers
             }
         }
 
-        
+
         [HttpGet("faculty/{faculty}")]
         public async Task<ActionResult<APIResponse<IEnumerable<EventDTO>>>> GetEventsByFaculty(string faculty)
         {
@@ -337,7 +340,6 @@ namespace CET_Backend.Controllers
 
                 if (string.Equals(faculty, "All", StringComparison.OrdinalIgnoreCase))
                 {
-                    // Return all events if 'All' is passed
                     events = await _eventService.GetAllEventsAsync();
                 }
                 else
@@ -367,7 +369,7 @@ namespace CET_Backend.Controllers
             }
         }
 
-        
+
         [HttpGet("scope/{scope}")]
         [ProducesResponseType(typeof(APIResponse<IEnumerable<EventDTO>>), 200)]
         public async Task<ActionResult<APIResponse<IEnumerable<EventDTO>>>> GetEventsByScope(string scope)
@@ -396,7 +398,7 @@ namespace CET_Backend.Controllers
             }
         }
 
-        
+
         [HttpGet("status/{status}")]
         [ProducesResponseType(typeof(APIResponse<IEnumerable<EventDTO>>), 200)]
         public async Task<ActionResult<APIResponse<IEnumerable<EventDTO>>>> GetEventsByStatus(string status)
@@ -435,7 +437,7 @@ namespace CET_Backend.Controllers
             }
         }
 
-       
+
         [HttpGet("upcoming")]
         [ProducesResponseType(typeof(APIResponse<IEnumerable<EventDTO>>), 200)]
         public async Task<ActionResult<APIResponse<IEnumerable<EventDTO>>>> GetUpcomingEvents()
@@ -522,6 +524,42 @@ namespace CET_Backend.Controllers
                 return BadRequest(new { Error = ex.Message });
             }
         }
+        [HttpPost("{eventId}/register")]
+        [Authorize(Roles = "Student")]
+        public async Task<IActionResult> RegisterForEvent(int eventId)
+        {
+            var studentId = int.Parse(User.FindFirstValue("StudentId"));
+            // assuming JWT contains StudentId
+            var result = await _eventService.RegisterStudentAsync(eventId, studentId);
+
+            if (!result)
+                return BadRequest(new { Message = "Already registered or event not found" });
+
+            return Ok(new { Message = "Registered successfully" });
+        }
+
+        [HttpDelete("{eventId}/unregister")]
+        [Authorize(Roles = "Student")]
+        public async Task<IActionResult> CancelRegistration(int eventId)
+        {
+            var studentId = int.Parse(User.FindFirstValue("StudentId"));
+            var result = await _eventService.CancelRegistrationAsync(eventId, studentId);
+
+            if (!result)
+                return BadRequest(new { Message = "Cannot cancel registration (maybe within 1 week or not registered)" });
+
+            return Ok(new { Message = "Registration cancelled successfully" });
+        }
+
+        [HttpGet("my-registrations")]
+        [Authorize(Roles = "Student")]
+        public async Task<IActionResult> GetMyRegistrations()
+        {
+            var studentId = int.Parse(User.FindFirstValue("StudentId"));
+            var events = await _eventService.GetRegisteredEventsAsync(studentId);
+            return Ok(events);
+        }
+
     }
 }
 

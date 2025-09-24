@@ -21,61 +21,60 @@ namespace CET_API.Services
             _config = config;
         }
 
+        public async Task<User?> GetUserByUsernameAsync(string username)
+        {
+            return await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
+        }
+
+        public async Task<bool> CheckPasswordAsync(User user, string password)
+        {
+            return BCrypt.Net.BCrypt.Verify(password, user.PasswordHash);
+        }
+
+        public async Task<string?> GenerateTokenAsync(User user)
+        {
+            var claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new Claim(ClaimTypes.Name, user.Username),
+            new Claim(ClaimTypes.Role, user.Role)
+        };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(
+                _config["Jwt:Issuer"],
+                _config["Jwt:Audience"],
+                claims,
+                expires: DateTime.Now.AddHours(5),
+                signingCredentials: creds
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+       
         public async Task<string?> RegisterAsync(RegisterDTO dto)
         {
-            if (await _context.Users.AnyAsync(u => u.Username == dto.Username))
-                return null;
+            var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Username == dto.Username);
+            if (existingUser != null) return null;
 
             var user = new User
             {
                 Username = dto.Username,
                 Email = dto.Email,
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
                 Role = dto.Role,
-                Semester = dto.Semester
+                Semester = dto.Role == "Student" ? dto.Semester : "",
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
+                IsApproved = false, 
+                IsRejected = false,
+                IsFixedAdmin = false
             };
 
-            try
-            {
-                _context.Users.Add(user);
-                await _context.SaveChangesAsync(); // first save the User
-
-                // Save role entity
-                if (dto.Role.Equals("Student", StringComparison.OrdinalIgnoreCase))
-                {
-                    var student = new Student
-                    {
-                        UserId = user.Id,
-                        Semester = dto.Semester
-                    };
-                    _context.Students.Add(student);
-                }
-                else if (dto.Role.Equals("Admin", StringComparison.OrdinalIgnoreCase))
-                {
-                    var admin = new Admin
-                    {
-                        UserId = user.Id,
-                    };
-                    _context.Admins.Add(admin);
-                }
-                else if (dto.Role.Equals("Coordinator", StringComparison.OrdinalIgnoreCase))
-                {
-                    var coordinator = new Coordinator
-                    {
-                        UserId = user.Id,
-                    };
-                    _context.Coordinators.Add(coordinator);
-                }
-
-                await _context.SaveChangesAsync(); // save role entity
-            }
-            catch (DbUpdateException ex)
-            {
-                // Log the full inner exception
-                throw new Exception(ex.InnerException?.Message ?? ex.Message);
-            }
-
-            return "Registered successfully.";
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+            return "Registered successfully. Wait for admin approval.";
         }
 
 
@@ -94,7 +93,6 @@ namespace CET_API.Services
             {
                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Name, user.Username),
-                //new Claim(ClaimTypes.Role, user.Role),
                 new Claim("role",user.Role),
                 new Claim("Semester", user.Semester ?? "")
             };

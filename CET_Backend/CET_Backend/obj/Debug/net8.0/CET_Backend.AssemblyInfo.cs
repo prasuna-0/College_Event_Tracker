@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CET_Backend")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+26eb71aba59cf6f313abc93c4cd234bbad95fd99")]
 [assembly: System.Reflection.AssemblyProductAttribute("CET_Backend")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CET_Backend")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

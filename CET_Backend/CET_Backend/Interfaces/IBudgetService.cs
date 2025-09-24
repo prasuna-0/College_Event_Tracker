@@ -19,7 +19,9 @@ namespace CET_Backend.Interfaces
         Task<Expense> AddExpenseAsync(int eventId, ExpenseCreateDto dto, IFormFile? receipt, string baseUrl);
         Task<Expense?> UpdateExpenseAsync(int eventId, int expenseId, ExpenseUpdateDto dto, IFormFile? receipt);
         Task<bool> DeleteExpenseAsync(int eventId, int expenseId);
-        Task<IReadOnlyList<Expense>> GetExpensesAsync(int eventId);
+        //Task<IReadOnlyList<Expense>> GetExpensesAsync(int eventId);
+        Task<IReadOnlyList<ExpenseDto>> GetExpensesAsync(int eventId);
+
 
         Task<BudgetHead> AddBudgetHeadAsync(int budgetId, BudgetHeadCreateDto dto);
         Task<BudgetHead?> UpdateBudgetHeadAsync(int headId, BudgetHeadUpdateDto dto);
@@ -27,3 +29,5 @@ namespace CET_Backend.Interfaces
         Task<IReadOnlyList<BudgetHeadSummaryDto>> GetBudgetHeadsAsync(int budgetId);
     }
 }
+
+

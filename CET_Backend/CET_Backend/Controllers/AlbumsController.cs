@@ -40,7 +40,6 @@ namespace CET_Backend.Controllers
                 await image.CopyToAsync(stream);
             }
 
-            // make public url
             var photo = new Photo
             {
                 FileName = image.FileName,
@@ -71,7 +70,6 @@ namespace CET_Backend.Controllers
 
             await _context.SaveChangesAsync();
 
-            // return clean response (avoid circular reference)
             return Ok(new
             {
                 album.Id,
@@ -96,18 +94,7 @@ namespace CET_Backend.Controllers
                 .ToListAsync();
             return Ok(albums);
         }
-        //[HttpGet("{id}")]
-        //public async Task<IActionResult> GetAlbumById(int id)
-        //{
-        //    var album = await _context.Albums
-        //        .Include(a => a.Photos)
-        //        .FirstOrDefaultAsync(a => a.Id == id);
-
-        //    if (album == null)
-        //        return NotFound(new { message = "Album not found" });
-
-        //    return Ok(album);
-        //}
+        
         [HttpGet("{id}")]
         public async Task<IActionResult> GetAlbumById(int id)
         {
@@ -134,24 +121,7 @@ namespace CET_Backend.Controllers
 
             return Ok(album);
         }
-        //[HttpDelete("{id}")]
-        //public async Task<IActionResult> DeleteAlbum(int id)
-        //{
-        //    var album = await _context.Albums.Include(a => a.Photos).FirstOrDefaultAsync(a => a.Id == id);
-        //    if (album == null) return NotFound();
-
-        //    // delete photo files from wwwroot/uploads
-        //    foreach (var photo in album.Photos)
-        //    {
-        //        var filePath = Path.Combine(_env.WebRootPath, photo.FilePath.TrimStart('/'));
-        //        if (System.IO.File.Exists(filePath))
-        //            System.IO.File.Delete(filePath);
-        //    }
-
-        //    _context.Albums.Remove(album);
-        //    await _context.SaveChangesAsync();
-        //    return Ok();
-        //}
+        
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAlbum(int id)
         {

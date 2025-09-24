@@ -280,3 +280,4 @@ C:\Users\Acer\Desktop\UniTrack\CET_Backend\CET_Backend\bin\Debug\net8.0\System.T
 C:\Users\Acer\Desktop\UniTrack\CET_Backend\CET_Backend\bin\Debug\net8.0\runtimes\browser\lib\net8.0\System.Text.Encodings.Web.dll
 C:\Users\Acer\Desktop\UniTrack\CET_Backend\CET_Backend\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 C:\Users\Acer\Desktop\UniTrack\CET_Backend\CET_Backend\bin\Debug\net8.0\CET_Backend.staticwebassets.runtime.json
+C:\Users\Acer\Desktop\UniTrack\CET_Backend\CET_Backend\obj\Debug\net8.0\CET_Backend.sourcelink.json

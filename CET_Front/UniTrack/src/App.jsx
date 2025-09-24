@@ -27,6 +27,8 @@ import CHero from "./pages/coordinator/CHero";
 import CNotification  from "./pages/coordinator/CNotification";
 import AlbumDetail from "./pages/coordinator/AlbumDetails";
 import AlbumDetails from "./pages/student/SAlbumDetails";
+import Expense from "./pages/admin/Expense";
+import ManageUsers from "./pages/admin/ManageUsers";
 // import ErrorBoundary from "./components/ErrorBoundary";
 
 
@@ -37,7 +39,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<HomePage/>} />
         <Route path="/login" element={<Login/>} />
-
+        
         <Route path="/student" element={<StudentDashboard/>}>
          <Route index element={<SHero/>} />
         <Route path="gallery" element={<Gallery/>}/>
@@ -53,11 +55,14 @@ const App = () => {
 
           <Route path="budget" element={<Budget/>}/>
           <Route  path="calendar" element={<Calender/>}/>
+          <Route path="expense" element={<Expense/>}/>
           <Route  path="volunteer" element={<Volunteer/>}/>
           <Route path="notifications" element={<Notification/>}/>
            <Route path="/admin/create-event" element={<CreateEvent/>} />
            <Route path="/admin/create-volunteer" element={<CreateVolunteer/>}/>
            <Route path="/admin/create-team" element={<CreateVTeam/>}/>
+           <Route path="/admin/manageusers" element={<ManageUsers/>}/>
+
         </Route>
         
          <Route path="/coordinator" element={<CoordinatorDashboard/>}> 

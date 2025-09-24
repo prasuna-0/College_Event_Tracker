@@ -21,7 +21,6 @@ namespace CET_Backend.Entities
         public decimal EstimatedAmount { get; set; }
         public DateTime DueDate { get; set; }
 
-        // Computed from Expenses; persisted for easy queries but kept in sync in service
         [Column(TypeName = "decimal(18,2)")]
         public decimal ActualAmount { get; set; }
 

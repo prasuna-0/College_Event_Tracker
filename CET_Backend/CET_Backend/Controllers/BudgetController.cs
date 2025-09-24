@@ -107,16 +107,14 @@ namespace CET_Backend.Controllers
             return Ok(new { success = true, data = summary });
         }
 
-        // =========================
-        // Dropdown events endpoint
-        // =========================
+        
         [HttpGet("dropdown-events")]
         [Authorize(Roles = "Admin,Coordinator")]
         public async Task<IActionResult> GetEvents()
         {
             try
             {
-                var events = await _service.GetAllEventsAsync(); // should return Id + Title
+                var events = await _service.GetAllEventsAsync(); 
                 return Ok(new { success = true, message = "Events retrieved successfully", data = events });
             }
             catch
@@ -132,13 +130,7 @@ namespace CET_Backend.Controllers
             return Ok(new { success = true, message = "Events retrieved successfully", data = events });
         }
 
-
-        // =========================
-        // Expense endpoints
-        // =========================
-
-        [HttpGet("{eventId:int}/expenses")]
-        [Authorize(Roles = "Admin,Coordinator")]
+        [HttpGet("{eventId}/expenses")]
         public async Task<IActionResult> GetExpenses(int eventId)
         {
             try
@@ -146,13 +138,16 @@ namespace CET_Backend.Controllers
                 var expenses = await _service.GetExpensesAsync(eventId);
                 return Ok(new { success = true, data = expenses });
             }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { success = false, message = ex.Message });
+            }
             catch (Exception ex)
             {
-                return StatusCode(500, new { success = false, message = "Error fetching expenses", details = ex.Message });
+                return BadRequest(new { success = false, message = ex.Message });
             }
         }
-
-        [HttpPost("{eventId:int}/expenses")]
+            [HttpPost("{eventId:int}/expenses")]
         [Authorize(Roles = "Admin")]
         [RequestSizeLimit(20_000_000)]
         public async Task<IActionResult> AddExpense(int eventId, [FromForm] ExpenseCreateDto dto, IFormFile? receipt)
@@ -177,7 +172,6 @@ namespace CET_Backend.Controllers
             }
         }
 
-        // PUT/DELETE and BudgetHead endpoints can also be wrapped similarly with try/catch + consistent JSON responses
         [HttpPost("{budgetId:int}/heads")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddHead(int budgetId, [FromBody] BudgetHeadCreateDto dto)
@@ -186,14 +180,33 @@ namespace CET_Backend.Controllers
             return CreatedAtAction(nameof(GetHeads), new { budgetId = budgetId }, head);
         }
 
+       
         [HttpPut("heads/{headId:int}")]
         [Authorize(Roles = "Admin,Coordinator")]
         public async Task<IActionResult> UpdateHead(int headId, [FromBody] BudgetHeadUpdateDto dto)
         {
+            if (dto == null)
+                return BadRequest("Invalid data.");
+
+           
             var updated = await _service.UpdateBudgetHeadAsync(headId, dto);
-            if (updated == null) return NotFound();
-            return Ok(updated);
+
+            if (updated == null)
+                return NotFound(new { success = false, message = "Budget head not found" });
+
+            return Ok(new
+            {
+                success = true,
+                data = new
+                {
+                    updated.Id,
+                    updated.Name,
+                    updated.AllocatedAmount,
+                    updated.ActualAmount,
+                }
+            });
         }
+
 
         [HttpDelete("heads/{headId:int}")]
         [Authorize(Roles = "Admin")]
@@ -212,3 +225,4 @@ namespace CET_Backend.Controllers
         }
     }
 }
+

@@ -41,7 +41,8 @@ namespace CET_Backend.Services
                 {
                     Id = h.Id,
                     Name = h.Name,
-                    AllocatedAmount = h.AllocatedAmount
+                    AllocatedAmount = h.AllocatedAmount,
+                    ActualAmount = h.ActualAmount
                 }).ToList()
             }).ToList();
         }
@@ -52,18 +53,15 @@ namespace CET_Backend.Services
             if (dto == null)
                 throw new ArgumentNullException(nameof(dto), "Budget allocation data cannot be null");
 
-            // Find the event
             var ev = await _db.Events.FindAsync(dto.EventId);
             if (ev == null)
                 throw new KeyNotFoundException("Event not found.");
 
-            // Check if budget already exists
             var existingBudget = await _db.Budgets
                 .FirstOrDefaultAsync(b => b.EventId == dto.EventId);
             if (existingBudget != null)
                 throw new InvalidOperationException("Budget already allocated for this event.");
 
-            // Create new budget
             var budget = new Budget
             {
                 EventId = dto.EventId,
@@ -79,28 +77,7 @@ namespace CET_Backend.Services
             return budget;
         }
 
-        //public async Task<Budget> AllocateAsync(BudgetAllocateDto dto)
-        //{
-        //    var exists = await _db.Events.AnyAsync(e => e.Id == dto.EventId);
-        //    if (!exists) throw new KeyNotFoundException($"Event {dto.EventId} not found");
-
-
-        //    var existing = await _db.Budgets.SingleOrDefaultAsync(b => b.EventId == dto.EventId);
-        //    if (existing != null) throw new InvalidOperationException("Budget already allocated for this event.");
-
-
-        //    var budget = new Budget
-        //    {
-        //        EventId = dto.EventId,
-        //        EstimatedAmount = dto.EstimatedAmount,
-        //        ActualAmount = 0m,
-        //        CreatedAt = DateTime.UtcNow,
-        //        UpdatedAt = DateTime.UtcNow
-        //    };
-        //    _db.Budgets.Add(budget);
-        //    await _db.SaveChangesAsync();
-        //    return budget;
-        //}
+      
         public async Task<IReadOnlyList<EventDTO>> GetAllEventsAsync()
         {
             return await _db.Events
@@ -127,39 +104,7 @@ namespace CET_Backend.Services
             return _db.Budgets.Include(b => b.Expenses)
             .SingleOrDefaultAsync(b => b.EventId == eventId);
         }
-        //        public async Task<BudgetSummaryDto?> GetSummaryAsync(int eventId, string baseUrl)
-        //        {
-        //            var budget = await _db.Budgets.Include(b => b.Expenses)
-        //            .SingleOrDefaultAsync(b => b.EventId == eventId);
-        //            if (budget == null) return null;
-
-
-        //            // Ensure ActualAmount is in sync with expenses
-        //            var actual = budget.Expenses.Sum(x => x.Amount);
-        //            if (actual != budget.ActualAmount)
-        //            {
-        //                budget.ActualAmount = actual;
-        //                budget.UpdatedAt = DateTime.UtcNow;
-        //                await _db.SaveChangesAsync();
-        //            }
-        //            return new BudgetSummaryDto
-        //            {
-        //                EventId = budget.EventId,
-        //                EstimatedAmount = budget.EstimatedAmount,
-        //                ActualAmount = budget.ActualAmount,
-        //                Expenses = budget.Expenses
-        //.OrderByDescending(e => e.SpentOn)
-        //.Select(e => new ExpenseDto
-        //{
-        //    Id = e.Id,
-        //    Title = e.Title,
-        //    Notes = e.Notes,
-        //    Amount = e.Amount,
-        //    SpentOn = e.SpentOn,
-        //    ReceiptUrl = string.IsNullOrWhiteSpace(e.ReceiptPath) ? null : CombineToPublicUrl(baseUrl, e.ReceiptPath)
-        //}).ToList()
-        //            };
-        //        }
+        //       
         public async Task<BudgetSummaryDto?> GetSummaryAsync(int eventId, string baseUrl)
         {
             var budget = await _db.Budgets
@@ -170,14 +115,12 @@ namespace CET_Backend.Services
 
             if (budget == null) return null;
 
-            // Sync actual amounts
             budget.ActualAmount = budget.Expenses.Sum(x => x.Amount);
             foreach (var head in budget.BudgetHeads)
                 head.ActualAmount = head.Expenses.Sum(e => e.Amount);
 
             await _db.SaveChangesAsync();
 
-            // Map to DTO
             var dto = new BudgetSummaryDto
             {
                 EventId = budget.EventId,
@@ -214,22 +157,22 @@ namespace CET_Backend.Services
 
             if (budget == null) return false;
 
-            // Remove expenses
             _db.Expenses.RemoveRange(budget.Expenses);
 
-            // Remove budget heads
             _db.BudgetHeads.RemoveRange(budget.BudgetHeads);
 
-            // Remove budget
             _db.Budgets.Remove(budget);
 
             await _db.SaveChangesAsync();
             return true;
         }
+     
+
         public async Task<Expense> AddExpenseAsync(int eventId, ExpenseCreateDto dto, IFormFile? receipt, string baseUrl)
         {
             var budget = await _db.Budgets
                 .Include(b => b.BudgetHeads)
+                .Include(b => b.Expenses) 
                 .SingleOrDefaultAsync(b => b.EventId == eventId)
                 ?? throw new KeyNotFoundException("Budget not found for event.");
 
@@ -243,25 +186,28 @@ namespace CET_Backend.Services
                 Amount = dto.Amount,
                 SpentOn = dto.SpentOn ?? DateTime.UtcNow,
                 ReceiptPath = savedReceiptPath,
-                BudgetHeadId = dto.BudgetHeadId
+                BudgetHeadId = dto.BudgetHeadId,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
             };
 
             _db.Expenses.Add(expense);
+            await _db.SaveChangesAsync();
 
-            // Update budget actual
-            budget.ActualAmount += expense.Amount;
-
-            // Update budget head actual
+            // 🔑 Sync totals after saving
+            budget.ActualAmount = budget.Expenses.Sum(e => e.Amount);
             if (dto.BudgetHeadId.HasValue)
             {
                 var head = budget.BudgetHeads.SingleOrDefault(h => h.Id == dto.BudgetHeadId.Value);
-                if (head != null) head.ActualAmount += expense.Amount;
+                if (head != null)
+                {
+                    head.ActualAmount = head.Expenses.Sum(e => e.Amount);
+                }
             }
 
             budget.UpdatedAt = DateTime.UtcNow;
             await _db.SaveChangesAsync();
 
-            // Optionally, attach full URL to receipt for frontend
             if (!string.IsNullOrEmpty(expense.ReceiptPath))
                 expense.ReceiptPath = $"{baseUrl.TrimEnd('/')}/{expense.ReceiptPath.TrimStart('/')}";
 
@@ -269,7 +215,6 @@ namespace CET_Backend.Services
         }
 
 
-       
 
         public async Task<Expense?> UpdateExpenseAsync(int eventId, int expenseId, ExpenseUpdateDto dto, IFormFile? receipt)
         {
@@ -282,18 +227,15 @@ namespace CET_Backend.Services
             var exp = await _db.Expenses.SingleOrDefaultAsync(e => e.Id == expenseId && e.BudgetId == budget.Id);
             if (exp == null) return null;
 
-            // Update budget actual
             budget.ActualAmount -= exp.Amount;
             budget.ActualAmount += dto.Amount;
 
-            // Update previous head actual
             if (exp.BudgetHeadId.HasValue)
             {
                 var prevHead = budget.BudgetHeads.SingleOrDefault(h => h.Id == exp.BudgetHeadId.Value);
                 if (prevHead != null) prevHead.ActualAmount -= exp.Amount;
             }
 
-            // Update new head actual
             if (dto.BudgetHeadId.HasValue)
             {
                 var newHead = budget.BudgetHeads.SingleOrDefault(h => h.Id == dto.BudgetHeadId.Value);
@@ -333,16 +275,31 @@ namespace CET_Backend.Services
             await _db.SaveChangesAsync();
             return true;
         }
-        public async Task<IReadOnlyList<Expense>> GetExpensesAsync(int eventId)
+       
+        public async Task<IReadOnlyList<ExpenseDto>> GetExpensesAsync(int eventId)
         {
-            var budget = await _db.Budgets.SingleOrDefaultAsync(b => b.EventId == eventId)
-            ?? throw new KeyNotFoundException("Budget not found for event.");
+            var budget = await _db.Budgets
+                .Include(b => b.Expenses)
+                .SingleOrDefaultAsync(b => b.EventId == eventId)
+                ?? throw new KeyNotFoundException("Budget not found for event.");
 
-
-            return await _db.Expenses.Where(e => e.BudgetId == budget.Id)
-            .OrderByDescending(e => e.SpentOn)
-            .ToListAsync();
+            return budget.Expenses
+                .OrderByDescending(e => e.SpentOn)
+                .Select(e => new ExpenseDto
+                {
+                    Id = e.Id,
+                    Title = e.Title,
+                    Notes = e.Notes,
+                    Amount = e.Amount,
+                    SpentOn = e.SpentOn,
+                    BudgetHeadId = e.BudgetHeadId,
+                    ReceiptUrl = e.ReceiptPath
+                })
+                .ToList()
+                .AsReadOnly();
         }
+
+
         private async Task<string?> SaveReceiptAsync(int eventId, IFormFile? file)
         {
             if (file == null || file.Length == 0) return null;
@@ -369,7 +326,6 @@ namespace CET_Backend.Services
             }
 
 
-            // Return path relative to wwwroot for public serving
             var relativePath = Path.Combine(relativeDir, fileName).Replace('\\', '/');
             return relativePath;
         }
@@ -398,14 +354,33 @@ namespace CET_Backend.Services
             return head;
         }
 
+        
         public async Task<BudgetHead?> UpdateBudgetHeadAsync(int headId, BudgetHeadUpdateDto dto)
         {
-            var head = await _db.BudgetHeads.FindAsync(headId);
+            var head = await _db.BudgetHeads
+                .Include(h => h.Budget) 
+                .SingleOrDefaultAsync(h => h.Id == headId);
+
             if (head == null) return null;
 
             head.Name = dto.Name;
             head.AllocatedAmount = dto.AllocatedAmount;
+            head.ActualAmount = dto.ActualAmount;
             head.UpdatedAt = DateTime.UtcNow;
+
+            if (head.Budget != null)
+            {
+                head.Budget.EstimatedAmount = await _db.BudgetHeads
+                    .Where(h => h.BudgetId == head.Budget.Id)
+                    .SumAsync(h => h.AllocatedAmount);
+
+                head.Budget.ActualAmount = await _db.BudgetHeads
+                    .Where(h => h.BudgetId == head.Budget.Id)
+                    .SumAsync(h => h.ActualAmount);
+
+                head.Budget.UpdatedAt = DateTime.UtcNow;
+            }
+
             await _db.SaveChangesAsync();
             return head;
         }
@@ -415,7 +390,6 @@ namespace CET_Backend.Services
             var head = await _db.BudgetHeads.Include(h => h.Expenses).SingleOrDefaultAsync(h => h.Id == headId);
             if (head == null) return false;
 
-            // remove expenses first
             _db.Expenses.RemoveRange(head.Expenses);
             _db.BudgetHeads.Remove(head);
             await _db.SaveChangesAsync();
@@ -440,4 +414,5 @@ namespace CET_Backend.Services
 
     }
 }
-   
+
+

@@ -1,3 +1,6 @@
+
+
+
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
@@ -5,7 +8,8 @@ import axios from "axios";
 export default function AlbumDetails() {
   const { id } = useParams();
   const [photos, setPhotos] = useState([]);
-  const [selectedIndex, setSelectedIndex] = useState(null); // index of current photo
+  const [selectedIndex, setSelectedIndex] = useState(null);
+  const [zoom, setZoom] = useState(1);
 
   useEffect(() => {
     const fetchPhotos = async () => {
@@ -19,21 +23,42 @@ export default function AlbumDetails() {
     fetchPhotos();
   }, [id]);
 
-  const openPhoto = (index) => setSelectedIndex(index);
-  const closePhoto = () => setSelectedIndex(null);
+  const openPhoto = (index) => {
+    setSelectedIndex(index);
+    setZoom(1); 
+  };
+  const closePhoto = () => {
+    setSelectedIndex(null);
+    setZoom(1);
+  };
 
   const prevPhoto = (e) => {
     e.stopPropagation();
     setSelectedIndex((prev) => (prev === 0 ? photos.length - 1 : prev - 1));
+    setZoom(1);
   };
 
   const nextPhoto = (e) => {
     e.stopPropagation();
     setSelectedIndex((prev) => (prev === photos.length - 1 ? 0 : prev + 1));
+    setZoom(1);
+  };
+
+  const zoomIn = (e) => {
+    e.stopPropagation();
+    setZoom((z) => z + 0.2);
+  };
+  const zoomOut = (e) => {
+    e.stopPropagation();
+    setZoom((z) => (z > 0.4 ? z - 0.2 : z));
+  };
+  const resetZoom = (e) => {
+    e.stopPropagation();
+    setZoom(1);
   };
 
   return (
-    <div style={{ padding: 20 ,marginTop: "80px"}}>
+    <div style={{ padding: 20, marginTop: "80px" }}>
       <h2>Album Photos</h2>
       <div
         style={{
@@ -47,7 +72,13 @@ export default function AlbumDetails() {
             key={photo.id}
             src={`http://localhost:5226${photo.filePath}`}
             alt="album"
-            style={{ width: "100%", height: 150, objectFit: "cover", borderRadius: 8, cursor: "pointer" }}
+            style={{
+              width: "100%",
+              height: 150,
+              objectFit: "cover",
+              borderRadius: 8,
+              cursor: "pointer",
+            }}
             onClick={() => openPhoto(index)}
           />
         ))}
@@ -57,21 +88,75 @@ export default function AlbumDetails() {
         <div
           style={{
             position: "fixed",
-            top: 0, left: 0, right: 0, bottom: 0,
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
             backgroundColor: "rgba(0,0,0,0.9)",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
             zIndex: 1000,
           }}
-          onClick={closePhoto} // click outside closes
+          onClick={closePhoto}
         >
+          <div
+            style={{
+              position: "absolute",
+              top: 20,
+              display: "flex",
+              gap: 10,
+              zIndex: 1100,
+            }}
+          >
+            <button
+              onClick={zoomOut}
+              style={{
+                padding: "6px 12px",
+                borderRadius: 6,
+                border: "none",
+                background: "#1877f2",
+                color: "#fff",
+                cursor: "pointer",
+              }}
+            >
+              −
+            </button>
+            <button
+              onClick={resetZoom}
+              style={{
+                padding: "6px 12px",
+                borderRadius: 6,
+                border: "none",
+                background: "#42b72a",
+                color: "#fff",
+                cursor: "pointer",
+              }}
+            >
+              Reset
+            </button>
+            <button
+              onClick={zoomIn}
+              style={{
+                padding: "6px 12px",
+                borderRadius: 6,
+                border: "none",
+                background: "#1877f2",
+                color: "#fff",
+                cursor: "pointer",
+              }}
+            >
+              +
+            </button>
+          </div>
+
           {/* Close button */}
           <button
             onClick={closePhoto}
             style={{
               position: "absolute",
-              top: 20, right: 20,
+              top: 20,
+              right: 20,
               background: "red",
               color: "#fff",
               border: "none",
@@ -127,14 +212,21 @@ export default function AlbumDetails() {
             ›
           </button>
 
+          {/* Image */}
           <img
             src={`http://localhost:5226${photos[selectedIndex].filePath}`}
             alt="full"
-            style={{ maxWidth: "90%", maxHeight: "90%", borderRadius: 10 }}
+            style={{
+              maxWidth: "90%",
+              maxHeight: "80%",
+              borderRadius: 10,
+              transform: `scale(${zoom})`,
+              transition: "transform 0.3s ease",
+            }}
+            onClick={(e) => e.stopPropagation()}
           />
         </div>
       )}
     </div>
   );
 }
-

@@ -5,8 +5,12 @@
       "PackagePath": "staticwebassets\\uploads\\295ae458-f815-4987-b2a3-ae4aa6340cdf.png"
     },
     {
-      "Id": "C:\\Users\\Acer\\Desktop\\UniTrack\\CET_Backend\\CET_Backend\\wwwroot\\uploads\\4efa35ed-97b4-4e4e-91d0-32f8ed5482ae.png",
-      "PackagePath": "staticwebassets\\uploads\\4efa35ed-97b4-4e4e-91d0-32f8ed5482ae.png"
+      "Id": "C:\\Users\\Acer\\Desktop\\UniTrack\\CET_Backend\\CET_Backend\\wwwroot\\uploads\\55745421-5f19-43fb-b4ea-9a47540532e3.jpeg",
+      "PackagePath": "staticwebassets\\uploads\\55745421-5f19-43fb-b4ea-9a47540532e3.jpeg"
+    },
+    {
+      "Id": "C:\\Users\\Acer\\Desktop\\UniTrack\\CET_Backend\\CET_Backend\\wwwroot\\uploads\\64dcaa94-56a7-4392-adb9-34a61619af19.jpeg",
+      "PackagePath": "staticwebassets\\uploads\\64dcaa94-56a7-4392-adb9-34a61619af19.jpeg"
     },
     {
       "Id": "C:\\Users\\Acer\\Desktop\\UniTrack\\CET_Backend\\CET_Backend\\wwwroot\\uploads\\7277f55f-feab-499c-b7cd-5cda0f85075b.png",
@@ -27,10 +31,6 @@
     {
       "Id": "C:\\Users\\Acer\\Desktop\\UniTrack\\CET_Backend\\CET_Backend\\wwwroot\\uploads\\fc2c70ca-2dc6-44d7-a5b2-49a1ecf325b4.webp",
       "PackagePath": "staticwebassets\\uploads\\fc2c70ca-2dc6-44d7-a5b2-49a1ecf325b4.webp"
-    },
-    {
-      "Id": "C:\\Users\\Acer\\Desktop\\UniTrack\\CET_Backend\\CET_Backend\\wwwroot\\uploads\\fe1197ed-9966-4a0f-ac20-0e091ba07e8f.png",
-      "PackagePath": "staticwebassets\\uploads\\fe1197ed-9966-4a0f-ac20-0e091ba07e8f.png"
     },
     {
       "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.CET_Backend.Microsoft.AspNetCore.StaticWebAssetEndpoints.props",

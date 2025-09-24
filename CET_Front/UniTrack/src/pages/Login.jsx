@@ -1,8 +1,9 @@
+
 import { useState } from "react";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
-import LoginImage from "../assets/login2.jpg"
+import LoginImage from "../assets/login2.jpg";
 
 function Login() {
   const [isLogin, setIsLogin] = useState(true);
@@ -26,52 +27,63 @@ function Login() {
     });
   };
 
-const handleSubmit = async (e) => {
+ const handleSubmit = async (e) => {
   e.preventDefault();
   try {
-    if (isLogin) {
-      const res = await axios.post(
-        "http://localhost:5226/api/Auth/login",
-        {
-          username: form.username,
-          password: form.password,
-        }
-      );
-
-      const token = res.data.token;
-      localStorage.setItem("token", token);
-
-      const { role } = jwtDecode(token);
-
-      if (role === "Admin") navigate("/admin");
-      else if (role === "Coordinator") navigate("/coordinator");
-      else navigate("/student");
-    } else {
+    if (!isLogin) {
+      // REGISTER 
       await axios.post("http://localhost:5226/api/Auth/register", form);
-
-      const res = await axios.post("http://localhost:5226/api/Auth/login", {
-        username: form.username,
-        password: form.password,
-      });
-
-      const token = res.data.token;
-      localStorage.setItem("token", token);
-
-      const { role } = jwtDecode(token);
-      if (role === "Admin") navigate("/admin");
-      else if (role === "Coordinator") navigate("/coordinator");
-      else navigate("/student");
+      alert("Registered successfully. Wait for Fixed Admin approval.");
+      setIsLogin(true); 
+      setForm({ username: "", email: "", password: "", role: "Student", semester: "" });
+      return;
     }
+
+    // LOGIN 
+    const res = await axios.post("http://localhost:5226/api/Auth/login", {
+      username: form.username,
+      password: form.password,
+    });
+
+    const token = res.data.token;
+    localStorage.setItem("token", token);
+
+    const decoded = jwtDecode(token);
+    const role =
+      decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"] ||
+      decoded.role;
+      
+  // const isFixedAdmin =
+  //       decoded["IsFixedAdmin"] === "True" || decoded["IsFixedAdmin"] === true;
+  //       localStorage.setItem("isFixedAdmin", isFixedAdmin ? "true" : "false");
+  const isFixedAdmin =
+  decoded["IsFixedAdmin"] === "True" ||
+  decoded["IsFixedAdmin"] === true ||
+  decoded["IsFixedAdmin"] === "true";
+
+localStorage.setItem("isFixedAdmin", isFixedAdmin ? "true" : "false");
+
+
+    if (role === "Admin") {
+        navigate("/admin", { state: { isFixedAdmin } });
+    }
+    else if (role === "Coordinator") navigate("/coordinator");
+    else navigate("/student");
+
   } catch (error) {
-    alert(error.response?.data || "Something went wrong");
+    if (error.response && error.response.status === 401) {
+      alert(error.response.data || "Your account is not approved yet.");
+    } else if (error.request) {
+      alert("No response from server. Check your network.");
+    } else {
+      alert("Error: " + error.message);
+    }
   }
 };
-
-
   return (
     <div style={styles.wrapper}>
       <div style={styles.imageSection}>
-        <img src={LoginImage}alt="Login" style={styles.image} />
+        <img src={LoginImage} alt="Login" style={styles.image} />
       </div>
 
       <div style={styles.container}>
@@ -169,14 +181,13 @@ const styles = {
     justifyContent: "center",
     alignItems: "center",
     padding: "1rem",
-   
   },
   image: {
     maxWidth: "100%",
     maxHeight: "80vh",
     borderRadius: "10px",
     objectFit: "cover",
-     boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
   },
   container: {
     flex: 1,

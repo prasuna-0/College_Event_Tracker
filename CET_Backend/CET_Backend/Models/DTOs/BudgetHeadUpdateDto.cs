@@ -9,6 +9,13 @@ namespace CET_Backend.Models.DTOs
         public string Name { get; set; } = string.Empty;
 
         [Range(0, 999999999999.99)]
+        [Required]
         public decimal AllocatedAmount { get; set; }
+        //public decimal ActualExpense { get; set; }
+        [Required]
+        [Range(0, double.MaxValue)]
+        public decimal ActualAmount { get; set; }
+
+        //public string? Notes { get; set; }
     }
 }

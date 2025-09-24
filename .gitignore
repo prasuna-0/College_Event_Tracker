@@ -15,3 +15,17 @@ CET_Backend/wwwroot/lib/
 
 # Env files
 *.env
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build output
+bin/
+obj/
+
+# Other temporary
+*.log
+*.vsidx

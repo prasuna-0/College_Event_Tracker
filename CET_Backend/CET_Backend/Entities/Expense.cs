@@ -34,7 +34,6 @@ namespace CET_Backend.Entities
         public DateTime SpentOn { get; set; } = DateTime.UtcNow;
 
 
-        // Stored as relative path under wwwroot
         [StringLength(500)]
         public string? ReceiptPath { get; set; }
         public int? BudgetHeadId { get; set; }

@@ -23,13 +23,14 @@ namespace CET_Backend.Data
         public DbSet<EventVolunteer> EventVolunteers { get; set; }
         public DbSet<Photo> Photos { get; set; }
         public DbSet<Album> Albums { get; set; }
+        public DbSet<EventRegistration> EventRegistrations { get; set; }
+
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            // Configure Event entity
             modelBuilder.Entity<Event>(entity =>
             {
                 entity.HasKey(e => e.Id);
@@ -83,7 +84,6 @@ namespace CET_Backend.Data
                     .IsRequired()
                     .HasDefaultValueSql("GETUTCDATE()");
 
-                // Add indexes for better query performance
                 entity.HasIndex(e => e.Faculty);
                 entity.HasIndex(e => e.EventScope);
                 entity.HasIndex(e => e.EventStatus);
@@ -109,7 +109,7 @@ namespace CET_Backend.Data
                 .IsRequired();
             modelBuilder.Entity<Budget>()
            .HasIndex(b => b.EventId)
-           .IsUnique(); // 1:1 Event->Budget
+           .IsUnique(); 
 
 
             modelBuilder.Entity<Budget>()
@@ -144,7 +144,6 @@ namespace CET_Backend.Data
                 .HasForeignKey(tv => tv.VolunteerId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // ---------------- EventVolunteer Many-to-Many ----------------
             modelBuilder.Entity<EventVolunteer>()
                 .HasKey(ev => new { ev.EventId, ev.VolunteerId });
 
@@ -173,8 +172,30 @@ namespace CET_Backend.Data
         public DbSet<Coordinator> Coordinators { get; set; }
         public DbSet<Role> Roles { get; set; }
 
-        //public DbSet<EventScope> EventScopes { get; set; }
-        //public DbSet<EventObjective> EventObjectives { get; set; }
-        //public DbSet<EventType> EventTypes { get; set; }
+      
     }
+    public static class DbSeeder
+    {
+        public static void SeedFixedAdmin(AppDbContext context)
+        {
+            context.Database.Migrate(); 
+
+            if (!context.Users.Any(u => u.IsFixedAdmin))
+            {
+                var fixedAdmin = new User
+                {
+                    Username = "FixedAdmin",
+                    Email="FixedAdmin12@gmail.com",
+                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("FixedAdmin@123"),
+                    Role = "Admin",
+                    IsApproved = true,
+                    IsFixedAdmin = true
+                };
+
+                context.Users.Add(fixedAdmin);
+                context.SaveChanges();
+            }
+        }
+    }
+
 }

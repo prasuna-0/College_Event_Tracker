@@ -423,8 +423,40 @@
   },
   {
     "ContainingType": "CET_Backend.Controllers.EventsController",
+    "Method": "RegisterForEvent",
+    "RelativePath": "api/Events/{eventId}/register",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "eventId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CET_Backend.Controllers.EventsController",
     "Method": "UnassignTeam",
     "RelativePath": "api/Events/{eventId}/unassign-team",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "eventId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CET_Backend.Controllers.EventsController",
+    "Method": "CancelRegistration",
+    "RelativePath": "api/Events/{eventId}/unregister",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
@@ -610,6 +642,16 @@
   },
   {
     "ContainingType": "CET_Backend.Controllers.EventsController",
+    "Method": "GetMyRegistrations",
+    "RelativePath": "api/Events/my-registrations",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CET_Backend.Controllers.EventsController",
     "Method": "GetEventsByScope",
     "RelativePath": "api/Events/scope/{scope}",
     "HttpMethod": "GET",
@@ -692,15 +734,15 @@
   },
   {
     "ContainingType": "CET_Backend.Controllers.NotificationController",
-    "Method": "BroadcastNotification",
-    "RelativePath": "api/Notification/broadcast",
+    "Method": "BroadcastToRole",
+    "RelativePath": "api/Notification/broadcast-to-role",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
         "Name": "dto",
-        "Type": "CET_Backend.Models.DTOs.BroadcastDto",
+        "Type": "CET_Backend.Controllers.RoleBroadcastDto",
         "IsRequired": true
       }
     ],
@@ -717,6 +759,22 @@
       {
         "Name": "id",
         "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CET_Backend.Controllers.NotificationController",
+    "Method": "SendToSelected",
+    "RelativePath": "api/Notification/send-to-selected",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "CET_Backend.Controllers.TargetedNotificationDto",
         "IsRequired": true
       }
     ],
@@ -862,6 +920,47 @@
         "IsRequired": false
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CET_Backend.Controllers.UserController",
+    "Method": "GetAllUsers",
+    "RelativePath": "api/User",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CET_Backend.Controllers.UserController",
+    "Method": "ApproveUser",
+    "RelativePath": "api/User/approve/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "approve",
+        "Type": "System.Boolean",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CET_Backend.Controllers.UserController",
+    "Method": "GetPendingUsers",
+    "RelativePath": "api/User/pending",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   },
   {

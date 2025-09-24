@@ -2,40 +2,15 @@
 using CET_Backend.Entities;
 using CET_Backend.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace CET_Backend.Services
 {
     public class NotificationService : INotificationService
     {
         private readonly AppDbContext _context;
+        public NotificationService(AppDbContext context) => _context = context;
 
-        public NotificationService(AppDbContext context)
-        {
-            _context = context;
-        }
-
-        public async Task CreateNotificationAsync(Notification notification, List<int> userIds)
-        {
-            await _context.Notifications.AddAsync(notification);
-            await _context.SaveChangesAsync();
-
-            foreach (var userId in userIds)
-            {
-                var nu = new NotificationUser
-                {
-                    NotificationId = notification.Id,
-                    UserId = userId,
-                    IsRead = false
-                };
-                await _context.NotificationUsers.AddAsync(nu);
-            }
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task<IEnumerable<NotificationUser>> GetUserNotificationsAsync(int userId)
+        public async Task<List<NotificationUser>> GetUserNotificationsAsync(int userId)
         {
             return await _context.NotificationUsers
                 .Include(nu => nu.Notification)
@@ -54,61 +29,37 @@ namespace CET_Backend.Services
             }
         }
 
-        public async Task<IEnumerable<User>> GetUsersByRoleAsync(string role)
+        public async Task CreateNotificationAsync(Notification notification, List<int> userIds)
         {
-            return await _context.Users
-                .Where(u => u.Role == role)
-                .ToListAsync();
+            _context.Notifications.Add(notification);
+            await _context.SaveChangesAsync();
+
+            var notificationUsers = userIds.Select(id => new NotificationUser
+            {
+                NotificationId = notification.Id,
+                UserId = id,
+                IsRead = false
+            }).ToList();
+
+            _context.NotificationUsers.AddRange(notificationUsers);
+            await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<User>> GetAllUsersAsync()
+        public async Task BroadcastNotificationAsync(Notification notification)
         {
-            return await _context.Users.ToListAsync();
-        }
+            _context.Notifications.Add(notification);
+            await _context.SaveChangesAsync();
 
-        // 🔹 Implementing DeleteNotificationAsync
-        public async Task DeleteNotificationAsync(int notificationId)
-        {
-            var notification = await _context.Notifications.FindAsync(notificationId);
-            if (notification != null)
+            var allUserIds = await _context.Users.Select(u => u.Id).ToListAsync();
+            var notificationUsers = allUserIds.Select(id => new NotificationUser
             {
-                // Delete associated NotificationUser entries first
-                var notificationUsers = _context.NotificationUsers
-                    .Where(nu => nu.NotificationId == notificationId);
-                _context.NotificationUsers.RemoveRange(notificationUsers);
+                NotificationId = notification.Id,
+                UserId = id,
+                IsRead = false
+            }).ToList();
 
-                _context.Notifications.Remove(notification);
-                await _context.SaveChangesAsync();
-            }
-        }
-
-        // Optional: broadcast notification to all users or specific role
-        public async Task BroadcastNotificationAsync(Notification notification, string? role = null)
-        {
-            List<int> userIds;
-            if (string.IsNullOrEmpty(role))
-            {
-                userIds = await _context.Users.Select(u => u.Id).ToListAsync();
-            }
-            else
-            {
-                userIds = await _context.Users
-                    .Where(u => u.Role == role)
-                    .Select(u => u.Id)
-                    .ToListAsync();
-            }
-
-            await CreateNotificationAsync(notification, userIds);
+            _context.NotificationUsers.AddRange(notificationUsers);
+            await _context.SaveChangesAsync();
         }
     }
 }
-
-
-
-
-
-
-
-
-
-

@@ -103,9 +103,7 @@ const handleSubmit = async (e) => {
   <option value="">Select Status</option>
   <option value="Upcoming">Upcoming</option>
   <option value="Active">Active</option>
-  <option value="Cancelled">Cancelled</option>
   <option value="Completed">Completed</option>
-  <option value="Planned">Planned</option>
 </select>
 
       <label style={labelStyle}>Location</label>
@@ -114,12 +112,12 @@ const handleSubmit = async (e) => {
       <label style={labelStyle}>Faculty</label>
       <select name="faculty" value={formData.faculty} onChange={handleChange} required style={inputStyle}>
         <option value=""> Select Faculty </option>
-        <option value="BScCSIT">BScCSIT</option>
+        <option value="BScCSIT">BSc.CSIT</option>
         <option value="ALL">ALL</option>
         <option value="BIM">BIM</option>
         <option value="BCA">BCA</option>
         <option value="BBS">BBS</option>
-        <option value="HM">BHM</option>
+        <option value="BHM">BHM</option>
       </select>
 
       <label style={labelStyle}>Scope</label>

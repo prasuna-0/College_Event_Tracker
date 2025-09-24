@@ -5,6 +5,9 @@ namespace CET_Backend.Interfaces
 {
     public interface IEventService
     {
+        Task<bool> RegisterStudentAsync(int eventId, int studentId);
+        Task<bool> CancelRegistrationAsync(int eventId, int studentId);
+        Task<IEnumerable<EventDTO>> GetRegisteredEventsAsync(int studentId);
         Task<IEnumerable<EventDTO>> GetAllEventsAsync();
         Task<EventDTO?> GetEventByIdAsync(int id);
         Task<EventDTO> CreateEventAsync(CreateEventDto createEventDto);
@@ -15,9 +18,7 @@ namespace CET_Backend.Interfaces
         Task<IEnumerable<EventDTO>> GetEventsByStatusAsync(string status);
         Task<IEnumerable<EventDTO>> GetUpcomingEventsAsync();
         Task<IEnumerable<EventDTO>> GetEventsByDateRangeAsync(DateTime startDate, DateTime endDate);
-        Task UpdateEventStatusAsync(int eventId, string newStatus, int adminId);
-        Task SendUpcomingEventNotificationsAsync(IEnumerable<Event> upcomingEvents);
-        Task SendBudgetDeadlineNotificationsAsync(IEnumerable<Budget> budgets);
+     
         Task<bool> AssignTeamAsync(int eventId, int teamId);
         Task<bool> UnassignTeamAsync(int eventId);
     }

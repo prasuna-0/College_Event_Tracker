@@ -1,8 +1,8 @@
 wwwroot\uploads\295ae458-f815-4987-b2a3-ae4aa6340cdf.png
-wwwroot\uploads\4efa35ed-97b4-4e4e-91d0-32f8ed5482ae.png
+wwwroot\uploads\55745421-5f19-43fb-b4ea-9a47540532e3.jpeg
+wwwroot\uploads\64dcaa94-56a7-4392-adb9-34a61619af19.jpeg
 wwwroot\uploads\7277f55f-feab-499c-b7cd-5cda0f85075b.png
 wwwroot\uploads\a0c1ce50-4b99-4dc6-b9ba-a26cbdc83677.webp
 wwwroot\uploads\ca76435c-608a-478d-a676-fc81fcce34ce.webp
 wwwroot\uploads\e2478142-34c4-41a6-bec6-7487118b2e66.webp
 wwwroot\uploads\fc2c70ca-2dc6-44d7-a5b2-49a1ecf325b4.webp
-wwwroot\uploads\fe1197ed-9966-4a0f-ac20-0e091ba07e8f.png

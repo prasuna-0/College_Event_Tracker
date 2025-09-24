@@ -64,7 +64,7 @@ export default function HomePage() {
 
             <div className="card">
               <i className="fas fa-search card-icon" style={{color:"darkGreen"}}></i>
-              <h4>Advanced Search</h4>
+              <h4>Advanced Filtering</h4>
               <p>Filter events by department, semester, status, and more</p>
             </div>
 

@@ -1119,6 +1119,64 @@
         }
       }
     },
+    "/api/Events/{eventId}/register": {
+      "post": {
+        "tags": [
+          "Events"
+        ],
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Events/{eventId}/unregister": {
+      "delete": {
+        "tags": [
+          "Events"
+        ],
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Events/my-registrations": {
+      "get": {
+        "tags": [
+          "Events"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Notification": {
       "get": {
         "tags": [
@@ -1154,7 +1212,7 @@
         }
       }
     },
-    "/api/Notification/broadcast": {
+    "/api/Notification/broadcast-to-role": {
       "post": {
         "tags": [
           "Notification"
@@ -1163,17 +1221,48 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/BroadcastDto"
+                "$ref": "#/components/schemas/RoleBroadcastDto"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/BroadcastDto"
+                "$ref": "#/components/schemas/RoleBroadcastDto"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/BroadcastDto"
+                "$ref": "#/components/schemas/RoleBroadcastDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Notification/send-to-selected": {
+      "post": {
+        "tags": [
+          "Notification"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TargetedNotificationDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TargetedNotificationDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/TargetedNotificationDto"
               }
             }
           }
@@ -1392,6 +1481,60 @@
               "format": "int32"
             }
           }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/User": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/User/approve/{id}": {
+      "put": {
+        "tags": [
+          "User"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "approve",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/User/pending": {
+      "get": {
+        "tags": [
+          "User"
         ],
         "responses": {
           "200": {
@@ -1719,20 +1862,6 @@
         },
         "additionalProperties": false
       },
-      "BroadcastDto": {
-        "type": "object",
-        "properties": {
-          "title": {
-            "type": "string",
-            "nullable": true
-          },
-          "message": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
       "BudgetAllocateDto": {
         "required": [
           "estimatedAmount",
@@ -1775,6 +1904,8 @@
       },
       "BudgetHeadUpdateDto": {
         "required": [
+          "actualAmount",
+          "allocatedAmount",
           "name"
         ],
         "type": "object",
@@ -1786,6 +1917,11 @@
           },
           "allocatedAmount": {
             "maximum": 999999999999.99,
+            "minimum": 0,
+            "type": "number",
+            "format": "double"
+          },
+          "actualAmount": {
             "minimum": 0,
             "type": "number",
             "format": "double"
@@ -2033,6 +2169,11 @@
           "updatedAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "teamId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -2254,6 +2395,24 @@
         },
         "additionalProperties": false
       },
+      "RoleBroadcastDto": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "Student": {
         "type": "object",
         "properties": {
@@ -2289,6 +2448,28 @@
             "items": {
               "$ref": "#/components/schemas/Event"
             },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TargetedNotificationDto": {
+        "type": "object",
+        "properties": {
+          "userIds": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "message": {
+            "type": "string",
             "nullable": true
           }
         },
@@ -2470,6 +2651,15 @@
           },
           "team": {
             "$ref": "#/components/schemas/Team"
+          },
+          "isApproved": {
+            "type": "boolean"
+          },
+          "isRejected": {
+            "type": "boolean"
+          },
+          "isFixedAdmin": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false

@@ -3,6 +3,8 @@ using CET_Backend.Entities;
 using CET_Backend.Enums;
 using CET_Backend.Interfaces;
 using CET_Backend.Models.DTOs;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace CET_Backend.Services
@@ -21,70 +23,7 @@ namespace CET_Backend.Services
             _notificationService = notificationService;
             _logger = logger;
         }
-        public async Task UpdateEventStatusAsync(int eventId, string newStatus, int adminId)
-        {
-            var ev = await _eventRepository.GetByIdAsync(eventId);
-            if (ev == null) throw new Exception("Event not found");
-
-            ev.EventStatus = Enum.Parse<EventStatus>(newStatus, true);
-            await _eventRepository.UpdateAsync(ev);
-
-            // Notify all coordinators
-            var coordinators = await _notificationService.GetUsersByRoleAsync("Coordinator");
-            var notification = new Notification
-            {
-                EventId = ev.Id,
-                Title = "Event Status Update",
-                Message = $"Event '{ev.Title}' status changed to {newStatus}.",
-                CreatedAt = DateTime.UtcNow
-            };
-
-            var coordinatorIds = coordinators.Select(c => c.Id).ToList();
-            await _notificationService.CreateNotificationAsync(notification, coordinatorIds);
-        }
-
-        // Send upcoming event notifications to all users
-        public async Task SendUpcomingEventNotificationsAsync(IEnumerable<Event> upcomingEvents)
-        {
-            var users = await _notificationService.GetAllUsersAsync();
-
-            foreach (var ev in upcomingEvents)
-            {
-                var notification = new Notification
-                {
-                    EventId = ev.Id,
-                    Title = "Upcoming Event",
-                    Message = $"Don't miss: '{ev.Title}' from {ev.StartDate:dd MMM} to {ev.EndDate:dd MMM}.",
-                    CreatedAt = DateTime.UtcNow
-                };
-
-                var userIds = users.Select(u => u.Id).ToList();
-                await _notificationService.CreateNotificationAsync(notification, userIds);
-            }
-        }
-
-        // Send budget deadline notifications to Admins and Coordinators
-        public async Task SendBudgetDeadlineNotificationsAsync(IEnumerable<Budget> budgets)
-        {
-            var adminsAndCoordinators = (await _notificationService.GetUsersByRoleAsync("Admin"))
-                .Concat(await _notificationService.GetUsersByRoleAsync("Coordinator"))
-                .ToList();
-
-            foreach (var budget in budgets)
-            {
-                var notification = new Notification
-                {
-                    BudgetId = budget.Id,
-                    Title = "Budget Submission Deadline",
-                    Message = $"Budget for '{budget.Event.Title}' must be submitted by {budget.DueDate:dd MMM}.",
-                    CreatedAt = DateTime.UtcNow
-                };
-
-                var userIds = adminsAndCoordinators.Select(u => u.Id).ToList();
-                await _notificationService.CreateNotificationAsync(notification, userIds);
-            }
-        }
-
+      
         public async Task<IEnumerable<EventDTO>> GetAllEventsAsync()
         {
             try
@@ -267,22 +206,7 @@ namespace CET_Backend.Services
             };
         }
 
-        //private static Event MapToEntity(CreateEventDto createEventDto)
-        //{
-        //    return new Event
-        //    {
-        //        Title = createEventDto.Title,
-        //        Description = createEventDto.Description,
-        //        StartDate = createEventDto.StartDate,
-        //        EndDate = createEventDto.EndDate,
-        //        EventStatus = Enum.Parse<EventStatus>(createEventDto.EventStatus, true),
-        //        Location = createEventDto.Location,
-        //        Faculty = Enum.Parse<Faculty>(createEventDto.Faculty, true),
-        //        EventScope = Enum.Parse<EventScope>(createEventDto.EventScope, true),
-        //        EventType = createEventDto.EventType,
-        //        Objective = createEventDto.Objective
-        //    };
-        //}
+       
         private static Event MapToEntity(CreateEventDto dto)
         {
             if (!Enum.TryParse<EventStatus>(dto.EventStatus, true, out var statusEnum))
@@ -333,8 +257,7 @@ namespace CET_Backend.Services
             if (ev == null || team == null)
                 return false;
 
-            // Assign team to event
-            ev.TeamId = teamId; // assume Events entity has TeamId nullable
+            ev.TeamId = teamId; 
             await _context.SaveChangesAsync();
 
             return true;
@@ -349,5 +272,97 @@ namespace CET_Backend.Services
             await _context.SaveChangesAsync();
             return true;
         }
+        public async Task<bool> RegisterStudentAsync(int eventId, int studentId)
+        {
+            var existing = await _context.EventRegistrations
+                .FirstOrDefaultAsync(r => r.EventId == eventId && r.StudentId == studentId);
+
+            if (existing != null)
+                return false; 
+
+            var ev = await _context.Events.FindAsync(eventId);
+            if (ev == null)
+                return false;
+
+            var registration = new EventRegistration
+            {
+                EventId = eventId,
+                StudentId = studentId,
+                RegisteredAt = DateTime.UtcNow
+            };
+
+            _context.EventRegistrations.Add(registration);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+      
+        public async Task<bool> CancelRegistrationAsync(int eventId, int studentId)
+        {
+            var registration = await _context.EventRegistrations
+                .FirstOrDefaultAsync(r => r.EventId == eventId && r.StudentId == studentId);
+
+            if (registration == null)
+                return false; 
+
+            var ev = await _context.Events.FindAsync(eventId);
+            if (ev == null)
+                return false; 
+
+            if ((ev.StartDate - DateTime.UtcNow).TotalDays < 7)
+                return false;
+
+            _context.EventRegistrations.Remove(registration);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        
+      
+        public async Task<IEnumerable<EventDTO>> GetRegisteredEventsAsync(int studentId)
+        {
+            var events = await _context.EventRegistrations
+                .Where(r => r.StudentId == studentId)
+                .Include(r => r.Event)
+                .Select(r => new EventDTO
+                {
+                    Id = r.Event.Id,
+                    Title = r.Event.Title,
+                    Description = r.Event.Description,
+                    StartDate = r.Event.StartDate,
+                    EndDate = r.Event.EndDate,
+                    EventStatus = r.Event.EventStatus.ToString(),
+                    Location = r.Event.Location,
+                    Faculty = r.Event.Faculty.ToString(),
+                    EventScope = r.Event.EventScope.ToString(),
+                    EventType = r.Event.EventType,
+                    Objective = r.Event.Objective,
+                    CreatedAt = r.Event.CreatedAt,
+                    UpdatedAt = r.Event.UpdatedAt,
+                    TeamId = r.Event.TeamId
+                })
+                .ToListAsync();
+
+            return events;
+        }
+        public async Task UpdateStatusesAsync(IEnumerable<EventDTO> events)
+        {
+            var eventIds = events.Select(e => e.Id).ToList();
+            var dbEvents = await _context.Events
+                .Where(e => eventIds.Contains(e.Id))
+                .ToListAsync();
+
+            foreach (var dbEvent in dbEvents)
+            {
+                var updatedEvent = events.First(e => e.Id == dbEvent.Id);
+
+                if (Enum.TryParse(updatedEvent.EventStatus, out EventStatus newStatus))
+                {
+                    if (dbEvent.EventStatus != newStatus)
+                        dbEvent.EventStatus = newStatus;
+                }
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
     }
 }

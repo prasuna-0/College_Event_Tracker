@@ -8,6 +8,6 @@
         public int VolunteerId { get; set; }
         public Volunteer? Volunteer { get; set; }
 
-        public string Role { get; set; } = "Member"; // optional per event
+        public string Role { get; set; } = "Member"; 
     }
 }
